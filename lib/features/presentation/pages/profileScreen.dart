@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/constants/images_manager.dart';
 import '../../../core/constants/colors_managers.dart';
+import '../../../core/helpingFunctions.dart';
 import '../widgets/Buttons/SocialButton.dart';
 import '../widgets/Buttons/logOutButton.dart';
 import '../widgets/Others/socialInfo.dart';
@@ -122,21 +123,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.green,
                                   icon: FontAwesomeIcons.whatsapp,
                                   onPressed: () {
-                                    // Handle WhatsApp button press
+                                   LaunchUtilsFunctions.openWhatsAppChat('5345353543',context);
                                   },
                                 ),
                                 SocialButton(
                                   color: Colors.red,
                                   icon: Icons.mail_outline_outlined,
                                   onPressed: () {
-                                    // Handle Email button press
+                                    LaunchUtilsFunctions.mailTo('5345353543',context);
                                   },
                                 ),
                                 SocialButton(
                                   color: Colors.purple,
                                   icon: Icons.call_outlined,
                                   onPressed: () {
-                                    // Handle Call button press
+                                    LaunchUtilsFunctions.callPhoneNumber('5345353543',context);
                                   },
                                 ),
                               ],
@@ -186,3 +187,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+

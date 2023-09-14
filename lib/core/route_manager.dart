@@ -11,6 +11,7 @@ import '../features/presentation/pages/auth/registerScreen.dart';
 import '../features/presentation/pages/profileScreen.dart';
 import '../features/presentation/pages/splashٍScreen.dart';
 import '../features/presentation/pages/taskScreen.dart';
+import '../features/presentation/pages/taskScreendetails.dart';
 
 class Routes {
 
@@ -23,6 +24,7 @@ class Routes {
   static const String profileScreenkey = '/profileScreenkey';
   static const String taskScreenkey = '/taskScreenkey';
   static const String layoutkey = '/layoutkey';
+  static const String taskDetailskey = '/taskDetailskey';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -36,6 +38,7 @@ class Routes {
       profileScreenkey: (context) => const ProfileScreen(),
       taskScreenkey: (context) => const TaskScreen(),
       layoutkey: (context) => const LayoutScreen(),
+      taskDetailskey: (context) =>  TaskDetails(),
      
     };
   }

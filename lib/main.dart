@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         //  home: const TaskScreen(),
         routes: Routes.routes,
-        initialRoute: Routes.registerPagekey,
+        initialRoute: Routes.layoutkey,
          
       ),
     );

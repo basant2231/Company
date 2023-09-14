@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
@@ -17,21 +18,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         try {
           final ImagePicker picker = ImagePicker();
           final XFile? pickedFile = await picker.pickImage(
-            source: event
-                .source, // You can change this to ImageSource.gallery if needed.
+            source: event.source,
             maxHeight: 1080,
             maxWidth: 1080,
           );
-          if (pickedFile != null) {
-            final croppedFile = await Functions.cropImage(pickedFile.path);
-            if (croppedFile != null) {
-              emit(ImagePickedSuccess(imageFile: File(croppedFile.path)));
-            } else {
-              emit(ImagePickedError(errorMessage: 'Error cropping image'));
-            }
-          } else {
-            emit(ImagePickedError(errorMessage: 'Error picking an image'));
-          }
+          final croppedFile = await CropFunction.cropImage(pickedFile!.path);
+
+          emit(ImagePickedSuccess(imageFile: File(croppedFile!.path)));
         } catch (e) {
           emit(ImagePickedError(errorMessage: 'Error: $e'));
         }

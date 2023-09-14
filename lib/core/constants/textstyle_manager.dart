@@ -29,4 +29,14 @@ class Mytextstyle{
   static const TextStyle inputTextStyle = TextStyle(
     color: MyColors.wwhite,
   );
+  static  TextStyle detailsTextStyle1 = TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: MyColors.ddarkindego,
+                        );
+  static  TextStyle contactdetailsTextStyle2 = TextStyle(
+    fontWeight: FontWeight.normal,
+    fontSize: 15,
+    color: MyColors.ddarkindego,
+  );
 }

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:company/core/validation.dart';
 import 'package:company/features/presentation/widgets/Dialogs/jobDialog.dart';
 import 'package:flutter/gestures.dart';
