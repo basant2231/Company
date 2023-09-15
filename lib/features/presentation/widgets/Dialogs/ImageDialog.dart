@@ -1,16 +1,17 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../Bloc/register_bloc/register_bloc.dart';
 
+import '../../theBloc/bloc/auth_bloc.dart';
 class ImageDialogWidget extends StatelessWidget {
   const ImageDialogWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final RegisterBloc registerbloc = BlocProvider.of<RegisterBloc>(context);
-    return BlocBuilder<RegisterBloc, RegisterState>(
+    final AuthBloc authbloc = BlocProvider.of<AuthBloc>(context);
+    return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         return AlertDialog(
           title: const Text('Please choose an option'),
@@ -20,7 +21,7 @@ class ImageDialogWidget extends StatelessWidget {
               InkWell(
                 onTap: () {
                   // Dispatch the Cameragallery event with "camera" option
-                  registerbloc
+                  authbloc
                       .add(CameragalleryEvent(source: ImageSource.camera));
                   Navigator.of(context).pop(); // Close the dialog
                 },
@@ -46,7 +47,7 @@ class ImageDialogWidget extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  registerbloc
+                  authbloc
                       .add(CameragalleryEvent(source: ImageSource.gallery));
                   Navigator.of(context).pop(); // Close the dialog
                 },

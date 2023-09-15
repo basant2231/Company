@@ -1,5 +1,5 @@
 import 'package:company/core/constants/colors_managers.dart';
-import 'package:company/features/presentation/pages/taskScreen.dart';
+import 'package:company/features/presentation/views/taskScreen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/MyLists.dart';

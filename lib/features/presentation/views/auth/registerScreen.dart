@@ -10,7 +10,7 @@ import '../../../../core/constants/colors_managers.dart';
 import '../../../../core/constants/images_manager.dart';
 import '../../../../core/constants/textstyle_manager.dart';
 import '../../../../core/route_manager.dart';
-import '../../Bloc/register_bloc/register_bloc.dart';
+import '../../theBloc/bloc/auth_bloc.dart';
 import '../../widgets/Dialogs/ImageDialog.dart';
 import '../../widgets/Dialogs/errorDialog.dart';
 
@@ -18,7 +18,7 @@ class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<RegisterScreen> createState() => RegisterScreenState();
+  State<RegisterScreen> createState() =>RegisterScreenState();
 }
 
 class RegisterScreenState extends State<RegisterScreen>
@@ -81,14 +81,14 @@ class RegisterScreenState extends State<RegisterScreen>
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return BlocBuilder<RegisterBloc, RegisterState>(
+    return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         bool showImage = false;
         File? imageFile;
         if (state is ImagePickedSuccess) {
           showImage = true;
           imageFile = state.imageFile;
-        } else if (state is ImagePickedError) {
+        } else if (state is Error) {
           showErrorDialog(context, state.errorMessage);
         }
 
@@ -109,7 +109,7 @@ class RegisterScreenState extends State<RegisterScreen>
                     Row(
                       children: [
                         const Text(
-                          'Register',
+                          'Auth',
                           style: Mytextstyle.headingStyle,
                         ),
                         FittedBox(
@@ -445,7 +445,7 @@ class RegisterScreenState extends State<RegisterScreen>
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 14),
-                            child: Text('Register',
+                            child: Text('Auth',
                                 style: Mytextstyle.headingStyle
                                     .copyWith(fontSize: 20)),
                           ),

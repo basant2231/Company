@@ -1,7 +1,7 @@
 import 'package:company/core/constants/images_manager.dart';
 import 'package:flutter/material.dart';
 
-import '../../pages/profileScreen.dart';
+import '../../views/profileScreen.dart';
 
 class CommentWidget extends StatelessWidget {
   CommentWidget(
