@@ -5,20 +5,26 @@ import 'package:company/features/presentation/widgets/Dialogs/jobDialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:uuid/uuid.dart';
 import '../../../../core/constants/colors_managers.dart';
 import '../../../../core/constants/images_manager.dart';
 import '../../../../core/constants/textstyle_manager.dart';
 import '../../../../core/route_manager.dart';
+import '../../../models/Registermodel.dart';
 import '../../theBloc/bloc/auth_bloc.dart';
 import '../../widgets/Dialogs/ImageDialog.dart';
 import '../../widgets/Dialogs/errorDialog.dart';
+import 'dart:io';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<RegisterScreen> createState() =>RegisterScreenState();
+  State<RegisterScreen> createState() => RegisterScreenState();
 }
 
 class RegisterScreenState extends State<RegisterScreen>
@@ -430,7 +436,23 @@ class RegisterScreenState extends State<RegisterScreen>
                     MaterialButton(
                       onPressed: () {
                         if (_signUpFormKey.currentState!.validate()) {
-                          _signUpFormKey.currentState!.validate();
+                          // Create a RegistrationModel with the form data
+                          final registrationModel = RegistrationModel(
+                            fullName: _fullnameTextController.text,
+                            emailAddress: _emailTextController.text,
+                            password: _passTextController.text,
+                            phoneNumber: _phoneTextController.text,
+                            position: _positionCPTextController.text,
+                            imageFile: imageFile!,
+                            
+                          );
+
+                          // Dispatch the RegisterUserEvent with the registration data
+                          BlocProvider.of<AuthBloc>(context).add(
+                            RegisterUserEvent(registrationModel: registrationModel),
+                          );
+
+                          // Navigate to the next screen
                           Navigator.of(context).pushNamed(Routes.layoutkey);
                         }
                       },

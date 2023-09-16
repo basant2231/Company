@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "225522589600",
-    "project_id": "company-2ce35",
-    "storage_bucket": "company-2ce35.appspot.com"
+    "project_number": "820981253030",
+    "project_id": "spark-de723",
+    "storage_bucket": "spark-de723.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:225522589600:android:4274fdc2f66cf912808ec5",
+        "mobilesdk_app_id": "1:820981253030:android:ca1bf583f0832b0dea4567",
         "android_client_info": {
           "package_name": "com.example.company"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA38eFcSqp3dNjs_uKq26Pw4fOwHqgfg1Y"
+          "current_key": "AIzaSyA-Olj_rd6wUOdQqWeGPPPl9BCsiqdFba0"
         }
       ],
       "services": {
