@@ -2,23 +2,24 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
-import 'package:uuid/uuid.dart';
-import '../../../../core/helpingFunctions.dart';
 import '../../../models/Registermodel.dart';
+import '../../../viewmodel/forgotpassword_view_model.dart';
+import '../../../viewmodel/login_view_model.dart';
 import '../../../viewmodel/registration_view_model.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthViewModel _authViewModel = AuthViewModel();
+  final RegisterViewModel _registerViewModel = RegisterViewModel();
+  final LoginViewModel _loginViewModel = LoginViewModel();
+  final ForgotPasswordViewModel _forgotPasswordViewModel = ForgotPasswordViewModel();
 
   AuthBloc() : super(AuthInitial()) {
     on<CameragalleryEvent>(_handleCameraGalleryEvent);
     on<RegisterUserEvent>(_handleRegisterUserEvent);
     on<LoginEvent>(_handleLoginEvent);
+    on<ForgotPasswordEvent>(_handleForgotPasswordEvent);
   }
 
   void _handleCameraGalleryEvent(
@@ -26,7 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(ImagePickedLoadingState());
-    final result = await _authViewModel.handleCameraGalleryEvent(event);
+    final result = await _registerViewModel.handleCameraGalleryEvent(event);
 
     result.fold(
       (error) {
@@ -43,7 +44,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(RegistrationLoadingState());
-    final result = await _authViewModel.handleRegisterUserEvent(event);
+    final result = await _registerViewModel.handleRegisterUserEvent(event);
 
     result.fold(
       (error) {
@@ -60,7 +61,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(LoginLoadingState());
-    final result = await _authViewModel.handleLoginEvent(event);
+    final result = await _loginViewModel.handleLoginEvent(event);
 
     result.fold(
       (error) {
@@ -68,6 +69,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
       (authResult) {
         emit(LoginSuccessState(user: authResult.user!));
+      },
+    );
+  }
+
+  void _handleForgotPasswordEvent(
+    ForgotPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(ForgotPasswordLoadingState());
+    final result = await _forgotPasswordViewModel.handleForgotPasswordEvent(event);
+
+    result.fold(
+      (error) {
+        emit(ForgotPasswordFailureState(error: error));
+      },
+      (_) {
+        emit(ForgotPasswordSuccessState());
       },
     );
   }

@@ -13,7 +13,7 @@ import 'package:uuid/uuid.dart';
 import 'package:dartz/dartz.dart';
 
 import '../presentation/theBloc/bloc/auth_bloc.dart';
-class AuthViewModel {
+class RegisterViewModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -79,18 +79,5 @@ class AuthViewModel {
   }
 
 
-  Future<Either<String, UserCredential>> handleLoginEvent(
-    LoginEvent event,
-  ) async {
-    try {
-      final UserCredential authResult = await _auth.signInWithEmailAndPassword(
-        email: event.email,
-        password: event.password,
-      );
 
-      return right(authResult);
-    } catch (e) {
-      return left('Login Error: $e');
-    }
-  }
 }

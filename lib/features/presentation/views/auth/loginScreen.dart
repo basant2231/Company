@@ -7,10 +7,10 @@ import '../../../../core/constants/colors_managers.dart';
 import '../../../../core/constants/textstyle_manager.dart';
 import '../../../../core/route_manager.dart';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // For Flutter Bloc
 import '../../theBloc/bloc/auth_bloc.dart';
-import '../../widgets/Dialogs/errorDialog.dart';
+import '../../widgets/Dialogs/errorsuccessDialog.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -18,7 +18,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin {
+class LoginScreenState extends State<LoginScreen>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> animation;
   late final TextEditingController _emailTextController =
@@ -63,10 +64,10 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
 
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
           if (state is LoginLoadingState) {
-            return Shimmer.fromColors(
+            Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: _buildStack(context, size, authBloc),
@@ -74,19 +75,21 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
           } else if (state is LoginFailureState) {
             // Show error dialog for LoginFailureState
             showErrorDialog(context, state.errorMessage);
-            return _buildStack(context, size, authBloc);
-          }  else if(state is LoginSuccessState){
-            // Return the default stack when neither LoginLoadingState nor LoginFailureState
-             Navigator.pushReplacementNamed(context, Routes.layoutkey);
-          
-            return _buildStack(context, size, authBloc);
-          }
-          else {
-            return _buildStack(context, size, authBloc);
-            // Return the default stack when neither LoginLoadingState nor LoginFailureState
-            
+          } else if (state is LoginSuccessState) {
+            showSuccessDialog(context, 'Login successful!');
+           Future.delayed(const Duration(seconds: 6), () {
+        Navigator.pushReplacementNamed(context, Routes.layoutkey);
+      });
+
+          } else {
+            showSuccessDialog(context, 'Login successful!');
+          Future.delayed(const Duration(seconds: 6), () {
+        Navigator.pushReplacementNamed(context, Routes.layoutkey);
+      });
+
           }
         },
+        child: _buildStack(context, size, authBloc),
       ),
     );
   }
@@ -260,7 +263,6 @@ class LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin 
                       email: _emailTextController.text,
                       password: _passTextController.text,
                     ));
-                    Navigator.pushReplacementNamed(context, Routes.layoutkey);
                   }
                 },
                 color: MyColors.llightblue,

@@ -14,7 +14,7 @@ import '../../../../core/route_manager.dart';
 import '../../../models/Registermodel.dart';
 import '../../theBloc/bloc/auth_bloc.dart';
 import '../../widgets/Dialogs/ImageDialog.dart';
-import '../../widgets/Dialogs/errorDialog.dart';
+import '../../widgets/Dialogs/errorsuccessDialog.dart';
 import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -26,15 +26,21 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => RegisterScreenState();
 }
 
-class RegisterScreenState extends State<RegisterScreen> with TickerProviderStateMixin {
+class RegisterScreenState extends State<RegisterScreen>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> animation;
 
-  late final TextEditingController _fullnameTextController = TextEditingController(text: '');
-  late final TextEditingController _emailTextController = TextEditingController(text: '');
-  late final TextEditingController _passTextController = TextEditingController(text: '');
-  late final TextEditingController _positionCPTextController = TextEditingController(text: '');
-  late final TextEditingController _phoneTextController = TextEditingController(text: '');
+  late final TextEditingController _fullnameTextController =
+      TextEditingController(text: '');
+  late final TextEditingController _emailTextController =
+      TextEditingController(text: '');
+  late final TextEditingController _passTextController =
+      TextEditingController(text: '');
+  late final TextEditingController _positionCPTextController =
+      TextEditingController(text: '');
+  late final TextEditingController _phoneTextController =
+      TextEditingController(text: '');
   final FocusNode _fullnameFocusNode = FocusNode();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passFocusNode = FocusNode();
@@ -42,20 +48,24 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
   final FocusNode _positionFocusNode = FocusNode();
   bool _obscureText = true;
   final _signUpFormKey = GlobalKey<FormState>();
- final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool showImage = false;
+  File? imageFile;
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 17));
-    animation = CurvedAnimation(parent: _animationController, curve: Curves.linear)
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener((animationStatus) {
-        if (animationStatus == AnimationStatus.completed) {
-          _animationController.reset();
-          _animationController.forward();
-        }
-      });
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 17));
+    animation =
+        CurvedAnimation(parent: _animationController, curve: Curves.linear)
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener((animationStatus) {
+            if (animationStatus == AnimationStatus.completed) {
+              _animationController.reset();
+              _animationController.forward();
+            }
+          });
     _animationController.forward();
     super.initState();
   }
@@ -79,10 +89,8 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
-        bool showImage = false;
-        File? imageFile;
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
         if (state is ImagePickedSuccessState) {
           showImage = true;
           imageFile = state.imageFile;
@@ -91,25 +99,28 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
         }
 
         if (state is RegistrationLoadingState) {
-          return Shimmer.fromColors(
+          Shimmer.fromColors(
             baseColor: Colors.grey[300]!,
             highlightColor: Colors.grey[100]!,
             child: registerBody(context, size, showImage, imageFile),
           );
         } else if (state is RegistrationFailureState) {
           showErrorDialog(context, state.errorMessage);
-          return registerBody(context, size, showImage, imageFile);
-        } else if (state is RegistrationSuccessState) {
-          Navigator.pushReplacementNamed(context, Routes.layoutkey);
-          return registerBody(context, size, showImage, imageFile);
         } else {
-          return registerBody(context, size, showImage, imageFile);
+          showSuccessDialog(context,
+              'Registration Successful!\nYou are now a registered user.');
+
+          Future.delayed(const Duration(seconds: 6), () {
+            Navigator.pushReplacementNamed(context, Routes.layoutkey);
+          });
         }
       },
+      child: registerBody(context, size, showImage, imageFile),
     );
   }
 
-  Scaffold registerBody(BuildContext context, Size size, bool showImage, File? imageFile) {
+  Scaffold registerBody(
+      BuildContext context, Size size, bool showImage, File? imageFile) {
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
@@ -128,25 +139,29 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                 Row(
                   children: [
                     const Text('Auth', style: Mytextstyle.headingStyle),
-                    FittedBox(child: Image.asset(MyImages.logo, height: 150, width: 150)),
+                    FittedBox(
+                        child: Image.asset(MyImages.logo,
+                            height: 150, width: 150)),
                   ],
                 ),
-              RichText(
-  text: TextSpan(
-    children: [
-      const TextSpan(text: 'Already have an account?  ', style: Mytextstyle.inputTextStyle),
-      
-      TextSpan(
-        text: 'Login',
-        style: Mytextstyle.linkStyle,
-        recognizer: TapGestureRecognizer()
-          ..onTap = () {
-            Navigator.of(context).pushNamed(Routes.loginPageKey);
-          },
-      ),
-    ],
-  ),
-),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      const TextSpan(
+                          text: 'Already have an account?  ',
+                          style: Mytextstyle.inputTextStyle),
+                      TextSpan(
+                        text: 'Login',
+                        style: Mytextstyle.linkStyle,
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.of(context)
+                                .pushNamed(Routes.loginPageKey);
+                          },
+                      ),
+                    ],
+                  ),
+                ),
                 Form(
                   key: _signUpFormKey,
                   child: Column(
@@ -158,7 +173,8 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                             child: TextFormField(
                               textInputAction: TextInputAction.next,
                               focusNode: _fullnameFocusNode,
-                              onEditingComplete: () => FocusScope.of(context).requestFocus(_emailFocusNode),
+                              onEditingComplete: () => FocusScope.of(context)
+                                  .requestFocus(_emailFocusNode),
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return 'Field can\'t be missing';
@@ -171,10 +187,12 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                                 hintText: 'Full name',
                                 hintStyle: Mytextstyle.inputTextStyle,
                                 enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: MyColors.wwhite),
+                                  borderSide:
+                                      BorderSide(color: MyColors.wwhite),
                                 ),
                                 focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: MyColors.llightblue),
+                                  borderSide:
+                                      BorderSide(color: MyColors.llightblue),
                                 ),
                                 errorBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: MyColors.rred),
@@ -191,7 +209,8 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                                     width: size.width * 0.24,
                                     height: size.width * 0.24,
                                     decoration: BoxDecoration(
-                                      border: Border.all(width: 1, color: MyColors.wwhite),
+                                      border: Border.all(
+                                          width: 1, color: MyColors.wwhite),
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: Center(
@@ -228,7 +247,8 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: MyColors.llightblue,
-                                        border: Border.all(width: 2, color: MyColors.wwhite),
+                                        border: Border.all(
+                                            width: 2, color: MyColors.wwhite),
                                         shape: BoxShape.circle,
                                       ),
                                       child: const Padding(
@@ -253,7 +273,8 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                       TextFormField(
                         textInputAction: TextInputAction.next,
                         focusNode: _emailFocusNode,
-                        onEditingComplete: () => FocusScope.of(context).requestFocus(_passFocusNode),
+                        onEditingComplete: () =>
+                            FocusScope.of(context).requestFocus(_passFocusNode),
                         validator: (value) {
                           if (value!.isEmpty || !value.isEmailValid()) {
                             return 'Please enter a valid Email address';
@@ -283,7 +304,8 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                       TextFormField(
                         focusNode: _passFocusNode,
                         textInputAction: TextInputAction.next,
-                        onEditingComplete: () => FocusScope.of(context).requestFocus(_phoneFocusNode),
+                        onEditingComplete: () => FocusScope.of(context)
+                            .requestFocus(_phoneFocusNode),
                         validator: (value) {
                           if (value!.isEmpty || !value.isPasswordValid()) {
                             return 'Please enter a valid password (at least 6 characters)';
@@ -329,7 +351,8 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                         textInputAction: TextInputAction.next,
                         focusNode: _phoneFocusNode,
                         onEditingComplete: () {
-                          FocusScope.of(context).requestFocus(_positionFocusNode);
+                          FocusScope.of(context)
+                              .requestFocus(_positionFocusNode);
                           _phoneFocusNode.unfocus();
                         },
                         validator: (value) {
@@ -339,7 +362,8 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                           return null;
                         },
                         onChanged: (v) {
-                          print('_phoneTextController.text ${_phoneTextController.text}');
+                          print(
+                              '_phoneTextController.text ${_phoneTextController.text}');
                         },
                         controller: _phoneTextController,
                         style: Mytextstyle.inputTextStyle,
@@ -398,7 +422,8 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                               borderSide: BorderSide(color: MyColors.wwhite),
                             ),
                             focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: MyColors.llightblue),
+                              borderSide:
+                                  BorderSide(color: MyColors.llightblue),
                             ),
                             errorBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: MyColors.rred),
@@ -433,7 +458,7 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                             registrationModel: registrationModel,
                           ),
                         );
-                        Navigator.pushReplacementNamed(context, Routes.layoutkey);
+                       
                       } else {
                         showErrorDialog(context, 'Pass the Images');
                       }
@@ -450,7 +475,9 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        child: Text('Auth', style: Mytextstyle.headingStyle.copyWith(fontSize: 20)),
+                        child: Text('Auth',
+                            style: Mytextstyle.headingStyle
+                                .copyWith(fontSize: 20)),
                       ),
                       const SizedBox(
                         width: 10,
@@ -470,4 +497,3 @@ class RegisterScreenState extends State<RegisterScreen> with TickerProviderState
     );
   }
 }
-

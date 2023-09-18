@@ -9,7 +9,21 @@ void showErrorDialog(BuildContext context, String errorMessage) {
     title: 'Error',
     desc: errorMessage,
     btnCancelOnPress: () {
+      
+    },
 
+  ).show();
+}
+void showSuccessDialog(BuildContext context, String message) {
+  AwesomeDialog(
+    btnOkColor: Colors.green,
+  btnCancelColor:Colors.green,
+    context: context,
+    dialogType: DialogType.success,
+    animType: AnimType.scale,
+    title: 'Successed',
+    desc: message,
+    btnCancelOnPress: () {
     },
 
   ).show();

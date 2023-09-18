@@ -1,4 +1,4 @@
-import 'package:company/features/presentation/widgets/Dialogs/errorDialog.dart';
+import 'package:company/features/presentation/widgets/Dialogs/errorsuccessDialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:image_cropper/image_cropper.dart';

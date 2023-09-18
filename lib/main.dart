@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         //  home: const TaskScreen(),
         routes: Routes.routes,
-        initialRoute: Routes.registerPagekey,
+        initialRoute: Routes.loginPageKey,
       ),
     );
   }
