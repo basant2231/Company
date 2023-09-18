@@ -30,7 +30,7 @@ class Routes {
     return {
 
        loginPageKey: (context) => const LoginScreen(),
-      registerPagekey: (context) => const RegisterScreen(),
+      registerPagekey: (context) => RegisterScreen(),
       forgotpassordPagekey: (context) => const ForgetPasswordScreen(),
       splashkey: (context) => const SplashScreen(),
       addTaskScreenkey: (context) => const AddTaskScreen(),

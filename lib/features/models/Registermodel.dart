@@ -8,7 +8,8 @@ class RegistrationModel {
   final String fullName;
   final String phoneNumber;
   final String position;
-  final File imageFile;
+   File imageFile;
+
   RegistrationModel({
     required this.emailAddress,
     required this.password,
@@ -17,6 +18,7 @@ class RegistrationModel {
     required this.phoneNumber,
     required this.position,
     required this.imageFile,
+
   });
  
 }

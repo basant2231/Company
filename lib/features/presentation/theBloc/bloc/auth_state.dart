@@ -8,20 +8,20 @@ abstract class AuthState extends Equatable {
 }
 
 class AuthInitial extends AuthState {}
-
-class Error extends AuthState {
+class ImagePickedLoadingState extends AuthState {}
+class ImagePickedFailedState extends AuthState {
   final String errorMessage;
 
-  const Error({required this.errorMessage});
+  const ImagePickedFailedState({required this.errorMessage});
 
   @override
   List<Object> get props => [errorMessage];
 }
 
-class ImagePickedSuccess extends AuthState {
+class ImagePickedSuccessState extends AuthState {
   final File imageFile;
 
-  const ImagePickedSuccess({
+  const ImagePickedSuccessState({
     required this.imageFile,
   });
 
@@ -30,40 +30,41 @@ class ImagePickedSuccess extends AuthState {
 }
 
 /*********************************************************************************************************** */
-class RegistrationLoading extends AuthState {}
+class RegistrationLoadingState extends AuthState {}
 
-class RegistrationFailure extends AuthState {
+class RegistrationFailureState extends AuthState {
   final String errorMessage;
 
-  const RegistrationFailure({required this.errorMessage});
+  const RegistrationFailureState({required this.errorMessage});
 
   @override
   List<Object> get props => [errorMessage];
 }
 
-class RegistrationLoaded extends AuthState {
+class RegistrationSuccessState extends AuthState {
   final RegistrationModel registrationModel; // Change this to RegistrationModel
 
-  const RegistrationLoaded({
+  const RegistrationSuccessState({
     required this.registrationModel,
   });
 }
 
 /*********************************************************************************************************** */
-class Authenticated extends AuthState {
+class LoginLoadingState extends AuthState {}
+class LoginSuccessState extends AuthState {
   final User
       user; // Replace 'User' with the actual user class from Firebase or your user model
 
-  Authenticated({required this.user});
+  LoginSuccessState({required this.user});
 
   //@override
   //List<Object?> get props => [user];
 }
 
-class LoginFailure extends AuthState {
+class LoginFailureState extends AuthState {
   final String errorMessage;
 
-  const LoginFailure({required this.errorMessage});
+  const LoginFailureState({required this.errorMessage});
 
   @override
   List<Object> get props => [errorMessage];
