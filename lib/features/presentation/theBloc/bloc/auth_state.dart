@@ -88,3 +88,13 @@ class ForgotPasswordFailureState extends AuthState {
   @override
   List<Object?> get props => [error];
 }
+
+/***********************************************************************************************************/
+class LogoutErrorState extends AuthState {
+  final String errorMessage;
+
+  LogoutErrorState({required this.errorMessage});
+}
+
+class LogoutSuccessState extends AuthState {}
+class LogoutLoadingState extends AuthState {}

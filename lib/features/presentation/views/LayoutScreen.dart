@@ -4,9 +4,7 @@ import 'package:company/core/constants/colors_managers.dart';
 import 'package:company/features/presentation/widgets/ScaffoldUtils/MyAppbar.dart';
 import 'package:company/features/presentation/widgets/ScaffoldUtils/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'addTaskScreen.dart';
 
 class LayoutScreen extends StatefulWidget {
   const LayoutScreen({Key? key}) : super(key: key);
@@ -64,9 +62,7 @@ class _LayoutState extends State<LayoutScreen> {
                         Tab(
                           text: "Add task",
                         ),
-                        Tab(
-                          text: "Log out",
-                        ),
+                      
                       ],
                     ),
                   ),

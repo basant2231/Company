@@ -46,6 +46,8 @@ class ForgotPasswordEvent extends AuthEvent {
   const ForgotPasswordEvent({
     required this.email,
   });
-
+}
  // List<Object?> get props => [email, password];
+ class LogOutEvent extends AuthEvent {
+
 }

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../models/Registermodel.dart';
 import '../../../viewmodel/forgotpassword_view_model.dart';
+import '../../../viewmodel/logOut_view_model.dart';
 import '../../../viewmodel/login_view_model.dart';
 import '../../../viewmodel/registration_view_model.dart';
 part 'auth_event.dart';
@@ -13,13 +14,17 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RegisterViewModel _registerViewModel = RegisterViewModel();
   final LoginViewModel _loginViewModel = LoginViewModel();
-  final ForgotPasswordViewModel _forgotPasswordViewModel = ForgotPasswordViewModel();
+  final ForgotPasswordViewModel _forgotPasswordViewModel =
+      ForgotPasswordViewModel();
+  final LogoutViewModel _logoutViewModel =
+      LogoutViewModel(); // Define _logoutViewModel
 
   AuthBloc() : super(AuthInitial()) {
     on<CameragalleryEvent>(_handleCameraGalleryEvent);
     on<RegisterUserEvent>(_handleRegisterUserEvent);
     on<LoginEvent>(_handleLoginEvent);
     on<ForgotPasswordEvent>(_handleForgotPasswordEvent);
+    on<LogOutEvent>(_handleLogoutEvent);
   }
 
   void _handleCameraGalleryEvent(
@@ -78,7 +83,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(ForgotPasswordLoadingState());
-    final result = await _forgotPasswordViewModel.handleForgotPasswordEvent(event);
+    final result =
+        await _forgotPasswordViewModel.handleForgotPasswordEvent(event);
 
     result.fold(
       (error) {
@@ -86,6 +92,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
       (_) {
         emit(ForgotPasswordSuccessState());
+      },
+    );
+  }
+
+  void _handleLogoutEvent(
+    LogOutEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(LogoutLoadingState());
+    final result = await _logoutViewModel.handleLogoutEvent();
+
+    result.fold(
+      (error) {
+        emit(LogoutErrorState(errorMessage: error));
+      },
+      (_) {
+        emit(LogoutSuccessState());
       },
     );
   }

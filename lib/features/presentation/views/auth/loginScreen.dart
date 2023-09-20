@@ -77,13 +77,13 @@ class LoginScreenState extends State<LoginScreen>
             showErrorDialog(context, state.errorMessage);
           } else if (state is LoginSuccessState) {
             showSuccessDialog(context, 'Login successful!');
-           Future.delayed(const Duration(seconds: 6), () {
+           Future.delayed(const Duration(seconds: 3), () {
         Navigator.pushReplacementNamed(context, Routes.layoutkey);
       });
 
           } else {
             showSuccessDialog(context, 'Login successful!');
-          Future.delayed(const Duration(seconds: 6), () {
+          Future.delayed(const Duration(seconds: 3), () {
         Navigator.pushReplacementNamed(context, Routes.layoutkey);
       });
 

@@ -1,5 +1,7 @@
+import 'package:company/features/presentation/theBloc/bloc/auth_bloc.dart';
 import 'package:company/features/presentation/widgets/ScaffoldUtils/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/constants/images_manager.dart';
@@ -7,6 +9,7 @@ import '../../../core/constants/colors_managers.dart';
 import '../../../core/helpingFunctions.dart';
 import '../widgets/Buttons/SocialButton.dart';
 import '../widgets/Buttons/logOutButton.dart';
+import '../widgets/Dialogs/errorsuccessDialog.dart';
 import '../widgets/Others/socialInfo.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -37,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+     final AuthBloc authbloc = BlocProvider.of<AuthBloc>(context);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       drawer: const MyDrawer(),
@@ -123,21 +127,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.green,
                                   icon: FontAwesomeIcons.whatsapp,
                                   onPressed: () {
-                                   LaunchUtilsFunctions.openWhatsAppChat('5345353543',context);
+                                    LaunchUtilsFunctions.openWhatsAppChat(
+                                        '5345353543', context);
                                   },
                                 ),
                                 SocialButton(
                                   color: Colors.red,
                                   icon: Icons.mail_outline_outlined,
                                   onPressed: () {
-                                    LaunchUtilsFunctions.mailTo('5345353543',context);
+                                    LaunchUtilsFunctions.mailTo(
+                                        '5345353543', context);
                                   },
                                 ),
                                 SocialButton(
                                   color: Colors.purple,
                                   icon: Icons.call_outlined,
                                   onPressed: () {
-                                    LaunchUtilsFunctions.callPhoneNumber('5345353543',context);
+                                    LaunchUtilsFunctions.callPhoneNumber(
+                                        '5345353543', context);
                                   },
                                 ),
                               ],
@@ -151,7 +158,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(
                               height: 20,
                             ),
-                            LogoutButton(ontap: () {})
+                            BlocBuilder<AuthBloc, AuthState>(
+                              builder: (context, state) {
+                                return LogoutButton(ontap: () {
+                                  showLogoutDialog(context, () {
+                      authbloc.add(LogOutEvent());
+                      
+                    });
+                                });
+                              },
+                            )
                           ],
                         ),
                       ),
@@ -187,4 +203,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-

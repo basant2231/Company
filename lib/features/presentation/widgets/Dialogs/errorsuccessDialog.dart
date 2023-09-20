@@ -1,6 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/route_manager.dart';
+
 void showErrorDialog(BuildContext context, String errorMessage) {
   AwesomeDialog(
     context: context,
@@ -8,23 +10,38 @@ void showErrorDialog(BuildContext context, String errorMessage) {
     animType: AnimType.scale,
     title: 'Error',
     desc: errorMessage,
-    btnCancelOnPress: () {
-      
-    },
-
+    btnCancelOnPress: () {},
   ).show();
 }
+
 void showSuccessDialog(BuildContext context, String message) {
   AwesomeDialog(
     btnOkColor: Colors.green,
-  btnCancelColor:Colors.green,
+    btnCancelColor: Colors.green,
     context: context,
     dialogType: DialogType.success,
     animType: AnimType.scale,
     title: 'Successed',
     desc: message,
+    btnCancelOnPress: () {},
+  ).show();
+}
+
+void showLogoutDialog(
+    BuildContext context, Function onConfirmLogout) {
+  AwesomeDialog(
+    btnOkColor: Colors.blue,
+    btnCancelColor: Colors.red,
+    context: context,
+    dialogType: DialogType.warning,
+    animType: AnimType.scale,
+    title: 'Confirm Logout',
+    desc: 'Are you sure you want to logout?',
     btnCancelOnPress: () {
     },
-
+    btnOkOnPress: () {
+      onConfirmLogout();
+      Navigator.pushReplacementNamed(context, Routes.loginPageKey);
+    },
   ).show();
 }

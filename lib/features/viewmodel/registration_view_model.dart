@@ -13,11 +13,13 @@ import 'package:uuid/uuid.dart';
 import 'package:dartz/dartz.dart';
 
 import '../presentation/theBloc/bloc/auth_bloc.dart';
+
+  const uuid = Uuid();
+   final String userId = uuid.v4();
 class RegisterViewModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final uuid = const Uuid();
 
   Future<Either<String, File>> handleCameraGalleryEvent(
     CameragalleryEvent event,
@@ -37,11 +39,11 @@ class RegisterViewModel {
     }
   }
 
+     
   Future<Either<String, RegistrationModel>> handleRegisterUserEvent(
     RegisterUserEvent event,
   ) async {
     try {
-      final String userId = uuid.v4();
       final UserCredential authResult =
           await _auth.createUserWithEmailAndPassword(
         email: event.registrationModel.emailAddress,
@@ -70,8 +72,6 @@ class RegisterViewModel {
         return right(registrationModel);
       });
 
-      // If everything is successful, you should return a value here.
-      // In case of success, this line will be reached.
       return right(event.registrationModel);
     } catch (e) {
       return left('Registration Error: $e');

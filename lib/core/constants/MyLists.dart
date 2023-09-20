@@ -1,14 +1,7 @@
 
-
-
-
-
-
 import 'package:flutter/cupertino.dart';
-
 import '../../features/presentation/views/addTaskScreen.dart';
 import '../../features/presentation/views/allWorkersScreen.dart';
-import '../../features/presentation/views/logoutScreen.dart';
 import '../../features/presentation/views/profileScreen.dart';
 import '../../features/presentation/views/taskScreen.dart';
 
@@ -38,7 +31,7 @@ static final List<Widget> pages = [
     const ProfileScreen(),
     const AllWorkersScreen(),
     const AddTaskScreen(),
-    const LogoutScreen(),
+   
   ];
 
 }

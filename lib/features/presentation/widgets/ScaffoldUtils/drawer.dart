@@ -1,6 +1,10 @@
 import 'package:company/core/constants/colors_managers.dart';
 import 'package:company/features/presentation/widgets/Dialogs/LogOutAlertDialog.dart';
+import 'package:company/features/presentation/widgets/Dialogs/errorsuccessDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../theBloc/bloc/auth_bloc.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({
@@ -14,54 +18,50 @@ class MyDrawer extends StatefulWidget {
 class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
+    final AuthBloc authbloc = BlocProvider.of<AuthBloc>(context);
     return Drawer(
-      child: ListView(
-        children: [
-          DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.cyan),
-              child: Column(
-                children: [
-                  Flexible(child: Image.asset('assets/images/checkmark.jpeg')),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Flexible(
-                      child: Text(
-                    'Work OS Arabic',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: MyColors.ddarkindego,
-                        fontSize: 22,
-                        fontStyle: FontStyle.italic),
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          return ListView(
+            children: [
+              DrawerHeader(
+                  decoration: const BoxDecoration(color: Colors.cyan),
+                  child: Column(
+                    children: [
+                      Flexible(
+                          child: Image.asset('assets/images/checkmark.jpeg')),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Flexible(
+                          child: Text(
+                        'Work OS Arabic',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: MyColors.ddarkindego,
+                            fontSize: 22,
+                            fontStyle: FontStyle.italic),
+                      )),
+                    ],
                   )),
-                ],
-              )),
-          const Divider(
-            thickness: 1,
-          ),
-          _listTiles(
-              label: 'Logout',
-              fct: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return LogoutDialog();
+              const Divider(
+                thickness: 1,
+              ),
+              _listTiles(
+                  label: 'Logout',
+                  fct: () {
+                    showLogoutDialog(context, () {
+                      authbloc.add(LogOutEvent());
+                    });
                   },
-                );
-              },
-              icon: Icons.logout_outlined),
-        ],
+                  icon: Icons.logout_outlined),
+            ],
+          );
+        },
       ),
     );
   }
-
 }
-
-
-
-
-
-
 
 Widget _listTiles(
     {required String label, required Function fct, required IconData icon}) {
