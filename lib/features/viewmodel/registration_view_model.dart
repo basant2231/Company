@@ -16,8 +16,8 @@ import '../presentation/theBloc/bloc/auth_bloc.dart';
 
  
 
-  final uuid = const Uuid();
-     final String userId = uuid.v4();
+final uuid = const Uuid();
+   //  final String userId = uuid.v4();
 class RegisterViewModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -51,7 +51,9 @@ class RegisterViewModel {
         email: event.registrationModel.emailAddress,
         password: event.registrationModel.password,
       );
-
+    
+      
+final String userIdd = authResult.user!.uid;
       final String imageFileName = 'profile_images/${authResult.user!.uid}.jpg';
       final Reference storageRef = _storage.ref().child(imageFileName);
       final UploadTask uploadTask =
@@ -60,15 +62,15 @@ class RegisterViewModel {
       await uploadTask.whenComplete(() async {
         final imageUrl = await storageRef.getDownloadURL();
 
-        await _firestore.collection('users').doc(userId).set({
-          'uid': userId,
+        await _firestore.collection('users').doc(userIdd).set({
+          'uid': userIdd,
           'fullName': event.registrationModel.fullName,
           'phoneNumber': event.registrationModel.phoneNumber,
           'position': event.registrationModel.position,
           'imagePath': imageUrl,
         });
  final CollectionReference tasksCollection =
-            _firestore.collection('users').doc(userId).collection('tasks');
+            _firestore.collection('users').doc(userIdd).collection('tasks');
 
         final registrationModel = event.registrationModel;
         registrationModel.imageFile = File(imageUrl);

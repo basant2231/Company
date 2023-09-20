@@ -23,18 +23,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print(
-            '===================================User is currently signed out!');
-      } else {
-        print('===================================User is signed in!');
-      }
-    });
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +45,9 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         //  home: const TaskScreen(),
         routes: Routes.routes,
-        initialRoute: Routes.loginPageKey,
+       initialRoute: FirebaseAuth.instance.currentUser == null
+      ? Routes.registerPagekey
+      : Routes.layoutkey,
       ),
     );
   }

@@ -106,7 +106,7 @@ class RegisterScreenState extends State<RegisterScreen>
           showSuccessDialog(context,
               'Registration Successful!\nYou are now a registered user.');
 
-          Future.delayed(const Duration(seconds: 4), () {
+          Future.delayed(const Duration(seconds: 3), () {
             Navigator.pushReplacementNamed(context, Routes.layoutkey);
           });
         }
