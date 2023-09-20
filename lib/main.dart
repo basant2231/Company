@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/bloc_observer.dart';
 import 'core/route_manager.dart';
 import 'features/presentation/theBloc/bloc/auth_bloc.dart';
+import 'features/presentation/theBloc/taskbloc/bloc/task_bloc.dart';
 
 
 void main() async {
@@ -41,6 +42,9 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider<AuthBloc>(
           create: (context) => AuthBloc(),
+        ),
+        BlocProvider<TaskBloc>(
+          create: (context) => TaskBloc(),
         ),
       ],
       child: MaterialApp(

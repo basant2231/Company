@@ -81,13 +81,7 @@ class LoginScreenState extends State<LoginScreen>
         Navigator.pushReplacementNamed(context, Routes.layoutkey);
       });
 
-          } else {
-            showSuccessDialog(context, 'Login successful!');
-          Future.delayed(const Duration(seconds: 3), () {
-        Navigator.pushReplacementNamed(context, Routes.layoutkey);
-      });
-
-          }
+          } 
         },
         child: _buildStack(context, size, authBloc),
       ),

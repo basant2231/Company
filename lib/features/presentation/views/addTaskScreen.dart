@@ -1,16 +1,16 @@
 import 'package:company/core/constants/colors_managers.dart';
-import 'package:company/features/presentation/widgets/ScaffoldUtils/drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/MyLists.dart';
+import '../../models/taskmodel.dart';
+import '../theBloc/taskbloc/bloc/task_bloc.dart';
 import '../widgets/Others/addtaskFormField.dart';
 import '../widgets/Dialogs/categoryDialog.dart';
-import 'taskScreen.dart';
 
-import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({Key? key}) : super(key: key);
@@ -44,125 +44,152 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: SingleChildScrollView(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Divider(
-                      thickness: 1,
+     final taskBloc = BlocProvider.of<TaskBloc>(context);
+     final currentUser = FirebaseAuth.instance.currentUser;
+
+    return BlocListener<TaskBloc, TaskState>(
+      listener: (context, state) {
+          if (state is TaskAddedSuccessState) {
+          print('_____________________________');
+        } else if (state is TaskAddedFailureState) {
+          // Handle failure state
+        }
+      },
+      child: Scaffold(
+          body: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: SingleChildScrollView(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25),
                     ),
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          textsWidget(textLabel: 'Task category*'),
-                          textFormFields(
-                              valueKey: 'TaskCategory',
-                              controller: _categoryController,
-                              enabled: false,
-                              fct: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return CategoryDialog(
-                                      categoryList: MyLists.taskcategorylist,
-                                      onCategorySelected: (selectedCategory) {
-                                        _categoryController.text =
-                                            selectedCategory;
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Divider(
+                          thickness: 1,
+                        ),
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              textsWidget(textLabel: 'Task category*'),
+                              textFormFields(
+                                  valueKey: 'TaskCategory',
+                                  controller: _categoryController,
+                                  enabled: false,
+                                  fct: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CategoryDialog(
+                                          categoryList: MyLists.taskcategorylist,
+                                          onCategorySelected: (selectedCategory) {
+                                            _categoryController.text =
+                                                selectedCategory;
+                                          },
+                                          size: size, // Pass the 'size' parameter
+                                        );
                                       },
-                                      size: size, // Pass the 'size' parameter
                                     );
                                   },
-                                );
-                              },
-                              maxLength: 100),
-                          textsWidget(textLabel: 'Task title*'),
-                          textFormFields(
-                              valueKey: 'Tasktitle',
-                              controller: _titleController,
-                              enabled: true,
-                              fct: () {},
-                              maxLength: 100),
-                          textsWidget(textLabel: 'Task Description*'),
-                          textFormFields(
-                              valueKey: 'TaskDescription',
-                              controller: _descriptionController,
-                              enabled: true,
-                              fct: () {},
-                              maxLength: 1000),
-                          textsWidget(textLabel: 'Task Deadline date*'),
-                          textFormFields(
-                              valueKey: 'DeadlineDate',
-                              controller: _deadlineDateController,
-                              enabled: false,
-                              fct: () {
-                                _pickDate();
-                              },
-                              maxLength: 100),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: MaterialButton(
-                                onPressed: () {},
-                                color: MyColors.ddarkindego,
-                                elevation: 10,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(13),
-                                    side: BorderSide.none),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 14),
-                                      child: Text(
-                                        'Upload',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                                  maxLength: 100),
+                              textsWidget(textLabel: 'Task title*'),
+                              textFormFields(
+                                  valueKey: 'Tasktitle',
+                                  controller: _titleController,
+                                  enabled: true,
+                                  fct: () {},
+                                  maxLength: 100),
+                              textsWidget(textLabel: 'Task Description*'),
+                              textFormFields(
+                                  valueKey: 'TaskDescription',
+                                  controller: _descriptionController,
+                                  enabled: true,
+                                  fct: () {},
+                                  maxLength: 1000),
+                              textsWidget(textLabel: 'Task Deadline date*'),
+                              textFormFields(
+                                  valueKey: 'DeadlineDate',
+                                  controller: _deadlineDateController,
+                                  enabled: false,
+                                  fct: () {
+                                    _pickDate();
+                                  },
+                                  maxLength: 100),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                       // Validate the form
+                    if (_formKey.currentState!.validate()) {
+                      // Create an instance of Tasks with the form data
+                      final tasks = Tasks(
+                        personId: currentUser?.displayName ?? '', // Replace with the actual person ID
+                        taskCategory: _categoryController.text,
+                        taskTitle: _titleController.text,
+                        taskDescription: _descriptionController.text,
+                        taskDeadlineDate: _deadlineDateController.text,
+                      );
+
+                      // Dispatch the AddTaskEvent with the Tasks data
+                      taskBloc.add(AddTaskEvent(tasks: tasks));
+                    }
+                                    },
+                                    color: MyColors.ddarkindego,
+                                    elevation: 10,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(13),
+                                        side: BorderSide.none),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: const [
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 14),
+                                          child: Text(
+                                            'Upload',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Icon(
+                                          Icons.upload_file,
+                                          color: Colors.white,
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Icon(
-                                      Icons.upload_file,
-                                      color: Colors.white,
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                            ],
                           ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
     );
   }
 

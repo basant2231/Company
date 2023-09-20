@@ -9,7 +9,7 @@ class Tasks extends Equatable {
   final String taskCategory;
   final String taskTitle;
   final String taskDescription;
-  final DateTime taskDeadlineDate;
+  final String taskDeadlineDate;
 
   Tasks({
     required this.personId,
@@ -27,15 +27,5 @@ class Tasks extends Equatable {
         taskDescription,
         taskDeadlineDate,
       ];
-
-  Map<String, dynamic> toJson() {
-    return {
-      'personId': personId,
-      'taskCategory': taskCategory,
-      'taskTitle': taskTitle,
-      'taskDescription': taskDescription,
-      'taskDeadlineDate': taskDeadlineDate.toIso8601String(), // Convert DateTime to a string
-    };
-  }
 
 }

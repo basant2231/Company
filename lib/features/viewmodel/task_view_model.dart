@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 
 
 class TaskViewModel {
-Uuid uuid = const Uuid();
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Future<Either<String, Tasks>> handleAddTaskEvent(AddTaskEvent event) async {
@@ -18,19 +18,18 @@ Uuid uuid = const Uuid();
 final String taskId = uuid.v4();
       DateTime now = DateTime.now();
       String formattedDate = DateFormat.yMMMMd('en_US').add_Hm().format(now);
-      await _firestore
-          .collection('users')
-          .doc(_auth.currentUser!.uid)
-          .collection("tasks")
-          .doc(taskId)
-          .set({
-        'personId': event.tasks.personId,
+       final CollectionReference tasksCollection =
+          _firestore.collection('users').doc(userId).collection('tasks');
+
+      await tasksCollection.doc(taskId).set({
+        'personId': userId,
         'taskCategory': event.tasks.taskCategory,
         'taskTitle': event.tasks.taskTitle,
         'taskDescription': event.tasks.taskDescription,
         'taskDeadlineDate': event.tasks.taskDeadlineDate,
-        'taskBeginningDate': formattedDate
+        'taskBeginningDate': formattedDate,
       });
+
       final taskModel = event.tasks;
       return right(taskModel);
     } catch (e) {

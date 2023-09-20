@@ -14,8 +14,10 @@ import 'package:dartz/dartz.dart';
 
 import '../presentation/theBloc/bloc/auth_bloc.dart';
 
-  const uuid = Uuid();
-   final String userId = uuid.v4();
+ 
+
+  final uuid = const Uuid();
+     final String userId = uuid.v4();
 class RegisterViewModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -39,11 +41,11 @@ class RegisterViewModel {
     }
   }
 
-     
   Future<Either<String, RegistrationModel>> handleRegisterUserEvent(
     RegisterUserEvent event,
   ) async {
     try {
+   
       final UserCredential authResult =
           await _auth.createUserWithEmailAndPassword(
         email: event.registrationModel.emailAddress,
@@ -65,6 +67,8 @@ class RegisterViewModel {
           'position': event.registrationModel.position,
           'imagePath': imageUrl,
         });
+ final CollectionReference tasksCollection =
+            _firestore.collection('users').doc(userId).collection('tasks');
 
         final registrationModel = event.registrationModel;
         registrationModel.imageFile = File(imageUrl);
@@ -72,6 +76,7 @@ class RegisterViewModel {
         return right(registrationModel);
       });
 
+      
       return right(event.registrationModel);
     } catch (e) {
       return left('Registration Error: $e');

@@ -6,7 +6,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:uuid/uuid.dart';
 import '../../../../core/constants/colors_managers.dart';
 import '../../../../core/constants/images_manager.dart';
 import '../../../../core/constants/textstyle_manager.dart';
@@ -15,9 +14,6 @@ import '../../../models/Registermodel.dart';
 import '../../theBloc/bloc/auth_bloc.dart';
 import '../../widgets/Dialogs/ImageDialog.dart';
 import '../../widgets/Dialogs/errorsuccessDialog.dart';
-import 'dart:io';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -96,7 +92,7 @@ class RegisterScreenState extends State<RegisterScreen>
           imageFile = state.imageFile;
         } else if (state is ImagePickedFailedState) {
           showErrorDialog(context, state.errorMessage);
-        }
+        }else
 
         if (state is RegistrationLoadingState) {
           Shimmer.fromColors(
@@ -106,11 +102,11 @@ class RegisterScreenState extends State<RegisterScreen>
           );
         } else if (state is RegistrationFailureState) {
           showErrorDialog(context, state.errorMessage);
-        } else {
+        } else if(state is RegistrationSuccessState){
           showSuccessDialog(context,
               'Registration Successful!\nYou are now a registered user.');
 
-          Future.delayed(const Duration(seconds: 3), () {
+          Future.delayed(const Duration(seconds: 4), () {
             Navigator.pushReplacementNamed(context, Routes.layoutkey);
           });
         }
@@ -442,15 +438,15 @@ class RegisterScreenState extends State<RegisterScreen>
                 ),
                 MaterialButton(
                   onPressed: () {
-                    if (_signUpFormKey.currentState!.validate()) {
                       if (imageFile != null) {
+                    if (_signUpFormKey.currentState!.validate()) {
                         final registrationModel = RegistrationModel(
                           fullName: _fullnameTextController.text,
                           emailAddress: _emailTextController.text,
                           password: _passTextController.text,
                           phoneNumber: _phoneTextController.text,
                           position: _positionCPTextController.text,
-                          imageFile: imageFile,
+                          imageFile: imageFile!,
                         );
 
                         BlocProvider.of<AuthBloc>(context).add(
