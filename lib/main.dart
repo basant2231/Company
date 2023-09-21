@@ -1,3 +1,5 @@
+import 'package:company/features/models/Registermodel.dart';
+import 'package:company/features/presentation/theBloc/bloc/profile_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,6 @@ import 'core/bloc_observer.dart';
 import 'core/route_manager.dart';
 import 'features/presentation/theBloc/bloc/auth_bloc.dart';
 import 'features/presentation/theBloc/taskbloc/bloc/task_bloc.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,10 +22,10 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
-
+RegistrationModel? registrationModel;
 class _MyAppState extends State<MyApp> {
-
-
+  
+  
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -35,6 +36,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<TaskBloc>(
           create: (context) => TaskBloc(),
         ),
+        BlocProvider(
+          create: (context) => ProfileBloc()..add(FetchProfileEvent()),
+        )
       ],
       child: MaterialApp(
         theme: ThemeData(
@@ -45,9 +49,9 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         //  home: const TaskScreen(),
         routes: Routes.routes,
-       initialRoute: FirebaseAuth.instance.currentUser == null
-      ? Routes.registerPagekey
-      : Routes.layoutkey,
+        initialRoute: FirebaseAuth.instance.currentUser == null
+            ? Routes.registerPagekey
+            : Routes.layoutkey,
       ),
     );
   }

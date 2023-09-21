@@ -1,5 +1,8 @@
 
+import 'package:company/features/viewmodel/profile_view_model.dart';
+
 import '../../core/helpingFunctions.dart';
+import '../../core/user_manager.dart';
 import '../models/Registermodel.dart';
 
 import 'dart:io';
@@ -14,10 +17,8 @@ import 'package:dartz/dartz.dart';
 
 import '../presentation/theBloc/bloc/auth_bloc.dart';
 
- 
-
 final uuid = const Uuid();
-   //  final String userId = uuid.v4();
+
 class RegisterViewModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -45,46 +46,56 @@ class RegisterViewModel {
     RegisterUserEvent event,
   ) async {
     try {
-   
-      final UserCredential authResult =
-          await _auth.createUserWithEmailAndPassword(
+      final UserCredential authResult = await _auth.createUserWithEmailAndPassword(
         email: event.registrationModel.emailAddress,
         password: event.registrationModel.password,
       );
-    
-      
-final String userIdd = authResult.user!.uid;
-      final String imageFileName = 'profile_images/${authResult.user!.uid}.jpg';
+
+      final String userIdd = authResult.user!.uid;
+
+      // Set the document data
+      final String imageFileName = 'profile_images/$userIdd.jpg';
       final Reference storageRef = _storage.ref().child(imageFileName);
-      final UploadTask uploadTask =
-          storageRef.putFile(event.registrationModel.imageFile);
+      final UploadTask uploadTask = storageRef.putFile(event.registrationModel.imageFile!);
 
       await uploadTask.whenComplete(() async {
         final imageUrl = await storageRef.getDownloadURL();
 
-        await _firestore.collection('users').doc(userIdd).set({
+        // Set the document data in Firestore
+        final DocumentReference userDocRef =
+            _firestore.collection('users').doc(userIdd);
+        await userDocRef.set({
           'uid': userIdd,
           'fullName': event.registrationModel.fullName,
           'phoneNumber': event.registrationModel.phoneNumber,
           'position': event.registrationModel.position,
           'imagePath': imageUrl,
         });
- final CollectionReference tasksCollection =
-            _firestore.collection('users').doc(userIdd).collection('tasks');
 
-        final registrationModel = event.registrationModel;
-        registrationModel.imageFile = File(imageUrl);
+        // Retrieve the document to get the 'uid' value
+        final userData = await userDocRef.get();
 
-        return right(registrationModel);
+        final Map<String, dynamic>? userDataMap = userData.data() as Map<String, dynamic>?;
+
+        if (userDataMap != null && userDataMap.containsKey('uid')) {
+          final uid = userDataMap['uid'] as String;
+          print('Retrieved UID from Firestore: $uid');
+
+          final registrationModel = event.registrationModel;
+          registrationModel.imageFile = File(imageUrl);
+
+          return right(registrationModel);
+        } else {
+          return left('User document not found in Firestore or does not contain UID.');
+        }
       });
 
-      
       return right(event.registrationModel);
     } catch (e) {
       return left('Registration Error: $e');
     }
+
+
+    
   }
-
-
-
 }

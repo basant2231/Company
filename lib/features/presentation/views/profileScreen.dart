@@ -4,54 +4,67 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../core/constants/images_manager.dart';
 import '../../../core/constants/colors_managers.dart';
 import '../../../core/helpingFunctions.dart';
+import '../theBloc/bloc/profile_bloc.dart';
 import '../widgets/Buttons/SocialButton.dart';
 import '../widgets/Buttons/logOutButton.dart';
 import '../widgets/Dialogs/errorsuccessDialog.dart';
 import '../widgets/Others/socialInfo.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
+  
 }
-
 class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    ProfileBloc().add(FetchProfileEvent());
+    super.initState();
+  }
   var titleTextStyle = const TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.bold,
     fontStyle: FontStyle.normal,
   );
-  final bool _isLoading = false;
   String phoneNumber = "";
   String email = "";
   String name = "";
   String job = "";
-  String? imageUrl;
+  String imageUrl = ""; // Initialize imageUrl to an empty string
   String joinedAt = "";
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  String position = "";
 
   @override
   Widget build(BuildContext context) {
-     final AuthBloc authbloc = BlocProvider.of<AuthBloc>(context);
+    final AuthBloc authbloc = BlocProvider.of<AuthBloc>(context);
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      drawer: const MyDrawer(),
-      body: _isLoading
-          ? const Center(
-              child: Text(
-                'Fetching data',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-            )
-          : SingleChildScrollView(
+
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (context, state) {
+        if (state is ProfileLoadingState) {
+          return const Scaffold(
+            drawer: MyDrawer(),
+            body: Center(
+              child: CircularProgressIndicator()
+            ),
+          );
+        } else if (state is ProfileSuccessState) {
+          final registrationModel = state.profile;
+
+          name = registrationModel.fullName;
+          job = registrationModel.position;
+          email = registrationModel.emailAddress;
+          phoneNumber = registrationModel.phoneNumber;
+          position = registrationModel.position;
+          imageUrl = registrationModel.imagePath as String; // Assign imageUrl or an empty string if null
+
+          return Scaffold(
+            drawer: const MyDrawer(),
+            body: SingleChildScrollView(
               child: Center(
                 child: Stack(
                   children: [
@@ -81,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Align(
                               alignment: Alignment.center,
                               child: Text(
-                                '$job Since joined $joinedAt',
+                                job,
                                 style: TextStyle(
                                   color: MyColors.ddarkindego,
                                   fontSize: 18,
@@ -128,15 +141,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   icon: FontAwesomeIcons.whatsapp,
                                   onPressed: () {
                                     LaunchUtilsFunctions.openWhatsAppChat(
-                                        '5345353543', context);
+                                      phoneNumber,
+                                      context,
+                                    );
                                   },
                                 ),
                                 SocialButton(
                                   color: Colors.red,
                                   icon: Icons.mail_outline_outlined,
                                   onPressed: () {
-                                    LaunchUtilsFunctions.mailTo(
-                                        '5345353543', context);
+                                    LaunchUtilsFunctions.mailTo(email, context);
                                   },
                                 ),
                                 SocialButton(
@@ -144,7 +158,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   icon: Icons.call_outlined,
                                   onPressed: () {
                                     LaunchUtilsFunctions.callPhoneNumber(
-                                        '5345353543', context);
+                                      phoneNumber,
+                                      context,
+                                    );
                                   },
                                 ),
                               ],
@@ -162,9 +178,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               builder: (context, state) {
                                 return LogoutButton(ontap: () {
                                   showLogoutDialog(context, () {
-                      authbloc.add(LogOutEvent());
-                      
-                    });
+                                    authbloc.add(LogOutEvent());
+                                  });
                                 });
                               },
                             )
@@ -180,18 +195,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             width: size.width * 0.26,
                             height: size.width * 0.26,
                             decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 5,
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor),
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                      imageUrl == null
-                                          ? MyImages.checkmark
-                                          : MyImages.clock,
-                                    ),
-                                    fit: BoxFit.fill)),
+                              border: Border.all(
+                                width: 5,
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                              ),
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: 
+                                     NetworkImage(imageUrl)
+                                  ,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           )
                         ],
                       ),
@@ -200,6 +215,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
+          );
+        } else if (state is ProfileErrorState) {
+          return Scaffold(
+            drawer: const MyDrawer(),
+            body: Center(
+              child: Text('Error: ${state.errorMessage}'),
+            ),
+          );
+        } else {
+          return const Scaffold(
+            drawer: MyDrawer(),
+            body: Center(
+              child: Text('Unknown state'),
+            ),
+          );
+        }
+      },
     );
   }
 }
