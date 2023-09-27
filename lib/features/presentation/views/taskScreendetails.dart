@@ -1,13 +1,34 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:company/core/constants/colors_managers.dart';
 import 'package:company/core/constants/images_manager.dart';
-import 'package:flutter/material.dart';
 
 import '../../../core/constants/textstyle_manager.dart';
+import '../theBloc/taskbloc/bloc/task_bloc.dart';
 import '../widgets/Others/comments.dart';
 
 class TaskDetails extends StatefulWidget {
-  const TaskDetails({super.key});
 
+String taskTitle; 
+String authorname; 
+String authorposition; 
+String taskdescritoon; 
+String deadlinedate; 
+String category; 
+String image; 
+   TaskDetails({
+    Key? key,
+    required this.taskTitle,
+    required this.authorname,
+    required this.authorposition,
+    required this.taskdescritoon,
+    required this.deadlinedate,
+    required this.category,
+    required this.image,
+  }) : super(key: key);
+
+ 
   @override
   _TaskDetailsState createState() => _TaskDetailsState();
 }
@@ -22,9 +43,8 @@ class _TaskDetailsState extends State<TaskDetails> {
     _commentController.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
+  void fetchTasksWithCondition() {
+    context.read<TaskBloc>().add(FetchTasksEvent());
   }
 
   @override
@@ -38,9 +58,8 @@ class _TaskDetailsState extends State<TaskDetails> {
               padding: const EdgeInsets.all(8.0),
               child: AppBar(
                 automaticallyImplyLeading: false,
-                backgroundColor:
-                    Colors.transparent, // Make the AppBar transparent
-                elevation: 0, // Remove the elevation (shadow)
+                backgroundColor: Colors.transparent,
+                elevation: 0,
                 title: TextButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -53,10 +72,11 @@ class _TaskDetailsState extends State<TaskDetails> {
                 ),
               ),
             ),
+            Text(widget.category),
             Align(
               alignment: Alignment.topCenter,
               child: Text(
-                'TaskTitle',
+                widget.taskTitle,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -90,9 +110,8 @@ class _TaskDetailsState extends State<TaskDetails> {
                               ),
                               shape: BoxShape.circle,
                               image: const DecorationImage(
-                                // Replace 'MyImages.clock' with the actual asset path of your image
                                 image: AssetImage(
-                                    MyImages.checkmark), // Example asset path
+                                    MyImages.checkmark),
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -104,11 +123,11 @@ class _TaskDetailsState extends State<TaskDetails> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'authorname',
+                                widget.authorname,
                                 style: Mytextstyle.contactdetailsTextStyle2,
                               ),
                               Text(
-                                'authorposition',
+                                widget.authorposition,
                                 style: Mytextstyle.contactdetailsTextStyle2,
                               )
                             ],
@@ -142,7 +161,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                         children: [
                           Text('Deadline date:',
                               style: Mytextstyle.detailsTextStyle1),
-                          Text('deadlinedate',
+                          Text(widget.deadlinedate,
                               style: Mytextstyle.contactdetailsTextStyle2
                                   .copyWith(color: MyColors.rred)),
                         ],
@@ -221,7 +240,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text('taskdescritoon',
+                      Text(widget.taskdescritoon,
                           style: Mytextstyle.contactdetailsTextStyle2),
                       const SizedBox(
                         height: 20,
@@ -339,26 +358,35 @@ class _TaskDetailsState extends State<TaskDetails> {
                                 ),
                               ),
                       ),
-                     
-                      ListView.separated(
-                        reverse: true,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (ctx, index) {
-                          return CommentWidget(
-                            commentId: 'yay',
-                            commentBody: 'yay',
-                            commenterId: 'yay',
-                            commenterName: 'yay',
-                            commenterImageUrl: 'yay',
-                          );
+                      BlocBuilder<TaskBloc, TaskState>(
+                        builder: (context, state) {
+                          if (state is TaskFetchSuccessState) {
+                            final tasks = state.tasks;
+                            return ListView.separated(
+                              reverse: true,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (ctx, index) {
+                                final task = tasks[index];
+                                return CommentWidget(
+                                  commentId: task.personId,
+                                  commentBody: task.taskDeadlineDate,
+                                  commenterId: task.taskDescription,
+                                  commenterName: task.taskDescription,
+                                  commenterImageUrl: task.taskDescription,
+                                );
+                              },
+                              separatorBuilder: (ctx, index) {
+                                return const Divider(
+                                  thickness: 1,
+                                );
+                              },
+                              itemCount: tasks.length,
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
                         },
-                        separatorBuilder: (ctx, index) {
-                          return const Divider(
-                            thickness: 1,
-                          );
-                        },
-                        itemCount: 4,
                       ),
                     ],
                   ),

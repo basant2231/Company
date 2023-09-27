@@ -8,11 +8,13 @@ import '../../../../viewmodel/task_view_model.dart';
 
 part 'task_event.dart';
 part 'task_state.dart';
+
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final TaskViewModel _taskViewModel = TaskViewModel();
 
   TaskBloc() : super(TaskInitial()) {
     on<AddTaskEvent>(_handleAddTaskEvent);
+    on<FetchTasksEvent>(_handleFetchTasksEvent);
   }
 
   void _handleAddTaskEvent(AddTaskEvent event, Emitter<TaskState> emit) async {
@@ -25,6 +27,20 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       },
       (tasks) {
         emit(TaskAddedSuccessState(tasks: tasks));
+      },
+    );
+  }
+
+  void _handleFetchTasksEvent(FetchTasksEvent event, Emitter<TaskState> emit) async {
+    emit(TaskFetchingLoadingState());
+    final result = await _taskViewModel.fetchTasksFromFirebase();
+
+    result.fold(
+      (error) {
+        emit(TaskFetchFailureState(error: error));
+      },
+      (tasks) {
+        emit(TaskFetchSuccessState(tasks: tasks));
       },
     );
   }

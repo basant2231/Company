@@ -17,3 +17,11 @@ class AddTaskEvent extends TaskEvent {
   @override
   List<Object> get props => [tasks];
 }
+
+class FetchTasksEvent extends TaskEvent {}
+
+class DeleteTaskEvent extends TaskEvent {
+  final String taskId;
+
+  DeleteTaskEvent(this.taskId);
+}

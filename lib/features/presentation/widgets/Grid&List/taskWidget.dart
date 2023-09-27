@@ -11,21 +11,20 @@ class TaskWidget extends StatelessWidget {
   final String taskId;
   final String uploadedBy;
   final bool isDone;
-
-  const TaskWidget({
+void Function()? onTap;
+TaskWidget({
     Key? key,
     required this.taskTitle,
     required this.taskDescription,
     required this.taskId,
     required this.uploadedBy,
     required this.isDone,
+    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(onTap: (){
-          Navigator.pushReplacementNamed(context, Routes.taskDetailskey);
-    },
+    return GestureDetector(onTap: (){},
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20.0),
         child: Card(
@@ -89,13 +88,7 @@ class TaskWidget extends StatelessWidget {
 
 Color getRandomBlueColor() {
   final List<Color> blueShades = [
-    Colors.blue[300]!,
-    Colors.blue[400]!,
-    Colors.blue[500]!,
-    Colors.blue[600]!,
-    Colors.blue[700]!,
-    Colors.blue[800]!,
-    Colors.blue[900]!,
+   
     Colors.indigo[300]!,
     Colors.indigo[400]!,
     Colors.indigo[500]!,

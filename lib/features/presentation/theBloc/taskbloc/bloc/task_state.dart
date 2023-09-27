@@ -22,3 +22,21 @@ class TaskAddedFailureState extends TaskState {
 
   TaskAddedFailureState({required this.error});
 }
+
+
+
+
+
+class TaskFetchingLoadingState extends TaskState {}
+
+class TaskFetchSuccessState extends TaskState {
+  final List<Tasks> tasks;
+
+  TaskFetchSuccessState({required this.tasks});
+}
+
+class TaskFetchFailureState extends TaskState {
+  final String error;
+
+  TaskFetchFailureState({required this.error});
+}

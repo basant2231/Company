@@ -1,4 +1,3 @@
-import 'package:company/features/models/Registermodel.dart';
 import 'package:company/features/presentation/theBloc/bloc/profile_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,11 +8,17 @@ import 'core/route_manager.dart';
 import 'features/presentation/theBloc/bloc/auth_bloc.dart';
 import 'features/presentation/theBloc/taskbloc/bloc/task_bloc.dart';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+import 'dart:async'; // Import the async library
+
+// ... Other imports ...
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Bloc.observer = CustomBlocObserver();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -22,12 +27,54 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
-RegistrationModel? registrationModel;
+
 class _MyAppState extends State<MyApp> {
-  
-  
+  late StreamSubscription<ConnectivityResult> connectivitySubscription;
+  bool hasInternet = true;
+  final connectivityStreamController = StreamController<ConnectivityResult>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the stream subscription
+    connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen((result) {
+      connectivityStreamController.sink
+          .add(result); // Add the result to the stream
+    });
+
+    // Listen to changes in the stream and update hasInternet accordingly
+    connectivityStreamController.stream.listen((result) {
+      setState(() {
+        hasInternet = result != ConnectivityResult.none;
+      });
+    });
+
+    // Check initial internet connectivity
+    checkInternetConnectivity().then((result) {
+      setState(() {
+        hasInternet = result;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the stream subscription and stream controller
+    connectivitySubscription.cancel();
+    connectivityStreamController.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final initialRoute = !hasInternet
+        ? Routes.noInternetScreen
+        : FirebaseAuth.instance.currentUser == null
+            ? Routes.registerPagekey
+            : Routes.layoutkey;
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
@@ -47,12 +94,14 @@ class _MyAppState extends State<MyApp> {
           scaffoldBackgroundColor: Colors.indigo[100],
         ),
         debugShowCheckedModeBanner: false,
-        //  home: const TaskScreen(),
+        initialRoute: initialRoute,
         routes: Routes.routes,
-        initialRoute: FirebaseAuth.instance.currentUser == null
-            ? Routes.registerPagekey
-            : Routes.layoutkey,
       ),
     );
+  }
+
+  Future<bool> checkInternetConnectivity() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
   }
 }

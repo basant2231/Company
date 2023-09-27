@@ -8,6 +8,7 @@ import '../features/presentation/views/allWorkersScreen.dart';
 
 import '../features/presentation/views/auth/loginScreen.dart';
 import '../features/presentation/views/auth/registerScreen.dart';
+import '../features/presentation/views/noInternet.dart';
 import '../features/presentation/views/profileScreen.dart';
 import '../features/presentation/views/splashٍScreen.dart';
 import '../features/presentation/views/taskScreen.dart';
@@ -25,12 +26,13 @@ class Routes {
   static const String taskScreenkey = '/taskScreenkey';
   static const String layoutkey = '/layoutkey';
   static const String taskDetailskey = '/taskDetailskey';
+  static const String noInternetScreen = '/noInternetScreen';
 
   static Map<String, WidgetBuilder> get routes {
     return {
 
        loginPageKey: (context) => const LoginScreen(),
-      registerPagekey: (context) => RegisterScreen(),
+      registerPagekey: (context) => const RegisterScreen(),
       forgotpassordPagekey: (context) => const ForgetPasswordScreen(),
       splashkey: (context) => const SplashScreen(),
       addTaskScreenkey: (context) => const AddTaskScreen(),
@@ -38,7 +40,8 @@ class Routes {
       profileScreenkey: (context) => const ProfileScreen(),
       taskScreenkey: (context) => const TaskScreen(),
       layoutkey: (context) => const LayoutScreen(),
-      taskDetailskey: (context) =>  TaskDetails(),
+     // taskDetailskey: (context) =>  const TaskDetails(),
+      noInternetScreen: (context) =>  const NoInternetScreen(),
      
     };
   }

@@ -27,5 +27,14 @@ class Tasks extends Equatable {
         taskDescription,
         taskDeadlineDate,
       ];
-
+factory Tasks.fromJson(Map<String, dynamic> json) {
+    return Tasks(
+      personId: json['personId'] ?? '',
+      taskCategory: json['taskCategory'] ?? '',
+      taskTitle: json['taskTitle'] ?? '',
+      taskDescription: json['taskDescription'] ?? '',
+      taskDeadlineDate: json['taskDeadlineDate'] ?? '',
+    );
+  }
+  
 }
