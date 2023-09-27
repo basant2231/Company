@@ -2,33 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:company/core/constants/colors_managers.dart';
-import 'package:company/core/constants/images_manager.dart';
 
 import '../../../core/constants/textstyle_manager.dart';
+import '../../../core/route_manager.dart';
 import '../theBloc/taskbloc/bloc/task_bloc.dart';
+import '../widgets/Dialogs/errorsuccessDialog.dart';
 import '../widgets/Others/comments.dart';
 
 class TaskDetails extends StatefulWidget {
+  String? taskTitle;
+  String? authorname;
+  String? authorposition;
+  String? taskdescritoon;
+  String? deadlinedate;
+  String? category;
+  String? imagee;
+  String? beginningdate;
+  String? taskId;
+  TaskDetails(
+      {Key? key,
+      this.taskTitle,
+      this.authorname,
+      this.authorposition,
+      this.taskdescritoon,
+      this.deadlinedate,
+      this.category,
+      this.imagee,
+      this.taskId,
+      this.beginningdate})
+      : super(key: key);
 
-String taskTitle; 
-String authorname; 
-String authorposition; 
-String taskdescritoon; 
-String deadlinedate; 
-String category; 
-String image; 
-   TaskDetails({
-    Key? key,
-    required this.taskTitle,
-    required this.authorname,
-    required this.authorposition,
-    required this.taskdescritoon,
-    required this.deadlinedate,
-    required this.category,
-    required this.image,
-  }) : super(key: key);
-
- 
   @override
   _TaskDetailsState createState() => _TaskDetailsState();
 }
@@ -60,23 +63,47 @@ class _TaskDetailsState extends State<TaskDetails> {
                 automaticallyImplyLeading: false,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                title: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Back',
-                    style: Mytextstyle.detailsTextStyle1
-                        .copyWith(fontStyle: FontStyle.italic),
-                  ),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Back',
+                        style: Mytextstyle.detailsTextStyle1
+                            .copyWith(fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            showDeleteDialog(context, () {
+                              
+                                Navigator.pop(context);
+                                
+                            
+                              context
+                                  .read<TaskBloc>()
+                                  .add(DeleteTaskEvent(widget.taskId!));
+
+                            });
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 35,
+                        )),
+                  ],
                 ),
               ),
             ),
-            Text(widget.category),
             Align(
               alignment: Alignment.topCenter,
               child: Text(
-                widget.taskTitle,
+                widget.taskTitle!,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -87,6 +114,7 @@ class _TaskDetailsState extends State<TaskDetails> {
             const SizedBox(
               height: 20,
             ),
+            Text(widget.category!, style: Mytextstyle.detailsTextStyle1),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(
@@ -109,9 +137,8 @@ class _TaskDetailsState extends State<TaskDetails> {
                                 color: MyColors.llightblue,
                               ),
                               shape: BoxShape.circle,
-                              image: const DecorationImage(
-                                image: AssetImage(
-                                    MyImages.checkmark),
+                              image: DecorationImage(
+                                image: NetworkImage(widget.imagee!),
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -123,11 +150,11 @@ class _TaskDetailsState extends State<TaskDetails> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.authorname,
+                                widget.authorname!,
                                 style: Mytextstyle.contactdetailsTextStyle2,
                               ),
                               Text(
-                                widget.authorposition,
+                                widget.authorposition!,
                                 style: Mytextstyle.contactdetailsTextStyle2,
                               )
                             ],
@@ -148,7 +175,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                         children: [
                           Text('Uploaded on:',
                               style: Mytextstyle.detailsTextStyle1),
-                          Text('date',
+                          Text(widget.beginningdate!,
                               style: Mytextstyle.contactdetailsTextStyle2
                                   .copyWith(fontStyle: FontStyle.normal)),
                         ],
@@ -161,7 +188,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                         children: [
                           Text('Deadline date:',
                               style: Mytextstyle.detailsTextStyle1),
-                          Text(widget.deadlinedate,
+                          Text(widget.deadlinedate!,
                               style: Mytextstyle.contactdetailsTextStyle2
                                   .copyWith(color: MyColors.rred)),
                         ],
@@ -240,7 +267,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text(widget.taskdescritoon,
+                      Text(widget.taskdescritoon!,
                           style: Mytextstyle.contactdetailsTextStyle2),
                       const SizedBox(
                         height: 20,
@@ -369,11 +396,11 @@ class _TaskDetailsState extends State<TaskDetails> {
                               itemBuilder: (ctx, index) {
                                 final task = tasks[index];
                                 return CommentWidget(
-                                  commentId: task.personId,
-                                  commentBody: task.taskDeadlineDate,
-                                  commenterId: task.taskDescription,
-                                  commenterName: task.taskDescription,
-                                  commenterImageUrl: task.taskDescription,
+                                  commentId: '',
+                                  commentBody: '',
+                                  commenterId: '',
+                                  commenterName: '',
+                                  commenterImageUrl: '',
                                 );
                               },
                               separatorBuilder: (ctx, index) {

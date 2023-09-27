@@ -10,7 +10,7 @@ abstract class TaskEvent extends Equatable {
 class AddTaskEvent extends TaskEvent {
   final Tasks tasks;
 
-  AddTaskEvent({
+  const AddTaskEvent({
     required this.tasks,
   });
 
@@ -23,5 +23,5 @@ class FetchTasksEvent extends TaskEvent {}
 class DeleteTaskEvent extends TaskEvent {
   final String taskId;
 
-  DeleteTaskEvent(this.taskId);
+  const DeleteTaskEvent(this.taskId);
 }

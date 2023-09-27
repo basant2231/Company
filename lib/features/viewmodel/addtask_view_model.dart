@@ -2,7 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/taskmodel.dart';
+import '../models/tasks.dart';
 
 class AddTaskViewModel {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

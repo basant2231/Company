@@ -10,7 +10,7 @@ class TaskState extends Equatable {
  class TaskInitial extends TaskState {}
 class TaskAddedSuccessState extends TaskState {
  final  Tasks tasks;
-  TaskAddedSuccessState({
+  const TaskAddedSuccessState({
     required this.tasks,
   });
   
@@ -20,7 +20,7 @@ class TaskAddedLoadingState extends TaskState {}
 class TaskAddedFailureState extends TaskState {
   final String error;
 
-  TaskAddedFailureState({required this.error});
+  const TaskAddedFailureState({required this.error});
 }
 
 
@@ -30,13 +30,29 @@ class TaskAddedFailureState extends TaskState {
 class TaskFetchingLoadingState extends TaskState {}
 
 class TaskFetchSuccessState extends TaskState {
-  final List<Tasks> tasks;
+  final List<TaskModel> tasks;
 
-  TaskFetchSuccessState({required this.tasks});
+  const TaskFetchSuccessState({required this.tasks});
 }
 
 class TaskFetchFailureState extends TaskState {
   final String error;
 
-  TaskFetchFailureState({required this.error});
+  const TaskFetchFailureState({required this.error});
+}
+
+
+class TaskDeletingLoadingState extends TaskState {}
+
+class TaskDeleteSuccessState extends TaskState {
+ 
+}
+
+class TaskDeleteFailureState extends TaskState {
+  final String error;
+
+  const TaskDeleteFailureState({required this.error});
+
+  @override
+  List<Object> get props => [error];
 }

@@ -1,40 +1,26 @@
-
-
-
-
-
-import 'package:equatable/equatable.dart';
-class Tasks extends Equatable {
-  final String personId;
-  final String taskCategory;
+class TaskModel {
+  final String taskId;
   final String taskTitle;
   final String taskDescription;
+  final String authorName;
+  final String authorPosition;
+  final String taskCategory;
   final String taskDeadlineDate;
+  final String taskImage;
+  final String taskBeginningDate;
+  final bool isDone;
 
-  Tasks({
-    required this.personId,
-    required this.taskCategory,
+  TaskModel({
+    required this.taskId,
+    required this.taskBeginningDate,
     required this.taskTitle,
     required this.taskDescription,
+    required this.authorName,
+    required this.authorPosition,
+    required this.taskCategory,
     required this.taskDeadlineDate,
+    required this.taskImage,
+    required this.isDone,
+    
   });
-
-  @override
-  List<Object?> get props => [
-        personId,
-        taskCategory,
-        taskTitle,
-        taskDescription,
-        taskDeadlineDate,
-      ];
-factory Tasks.fromJson(Map<String, dynamic> json) {
-    return Tasks(
-      personId: json['personId'] ?? '',
-      taskCategory: json['taskCategory'] ?? '',
-      taskTitle: json['taskTitle'] ?? '',
-      taskDescription: json['taskDescription'] ?? '',
-      taskDeadlineDate: json['taskDeadlineDate'] ?? '',
-    );
-  }
-  
 }

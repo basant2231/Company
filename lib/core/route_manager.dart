@@ -40,7 +40,7 @@ class Routes {
       profileScreenkey: (context) => const ProfileScreen(),
       taskScreenkey: (context) => const TaskScreen(),
       layoutkey: (context) => const LayoutScreen(),
-     // taskDetailskey: (context) =>  const TaskDetails(),
+      taskDetailskey: (context) =>   TaskDetails(),
       noInternetScreen: (context) =>  const NoInternetScreen(),
      
     };

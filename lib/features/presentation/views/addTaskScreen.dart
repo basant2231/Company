@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/MyLists.dart';
-import '../../models/taskmodel.dart';
+import '../../models/tasks.dart';
 import '../theBloc/taskbloc/bloc/task_bloc.dart';
 import '../widgets/Dialogs/errorsuccessDialog.dart';
 import '../widgets/Others/addtaskFormField.dart';

@@ -11,8 +11,9 @@ class TaskWidget extends StatelessWidget {
   final String taskId;
   final String uploadedBy;
   final bool isDone;
-void Function()? onTap;
-TaskWidget({
+  void Function()? onTap;
+  
+  TaskWidget({
     Key? key,
     required this.taskTitle,
     required this.taskDescription,
@@ -24,22 +25,23 @@ TaskWidget({
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(onTap: (){},
+    return GestureDetector(
+      onTap: onTap,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20.0),
         child: Card(
-          elevation:30,
+          elevation: 30,
           color: getRandomBlueColor(),
           child: Padding(
-              padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
               child: Column(
                 children: [
                   SizedBox(
-                    height: 100, // Set the desired height
-                    width: 100, // Set the desired width
+                    height: 100,
+                    width: 100,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                          50.0), // Adjust the radius as needed
+                      borderRadius: BorderRadius.circular(50.0),
                       child: Image.asset(
                         isDone ? MyImages.checkmark : MyImages.clock,
                         fit: BoxFit.contain,
@@ -51,35 +53,30 @@ TaskWidget({
                     children: [
                       Text(
                         taskTitle,
-                        maxLines: 2,
+                        maxLines: 4,
                         overflow: TextOverflow.ellipsis,
-                        style:  TextStyle(fontWeight: FontWeight.bold,color: Colors.grey[400]!),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[400]!),
                       ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    taskDescription,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 16,color: Colors.white),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    taskId,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 14,color: Colors.white),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    uploadedBy,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 14,color: Colors.white),
-                  ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        taskDescription,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        uploadedBy,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 14, color: Colors.white),
+                      ),
                     ],
                   ),
                 ],
-              )),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -88,7 +85,6 @@ TaskWidget({
 
 Color getRandomBlueColor() {
   final List<Color> blueShades = [
-   
     Colors.indigo[300]!,
     Colors.indigo[400]!,
     Colors.indigo[500]!,

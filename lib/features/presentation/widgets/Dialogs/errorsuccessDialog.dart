@@ -44,4 +44,22 @@ void showLogoutDialog(
       Navigator.pushReplacementNamed(context, Routes.loginPageKey);
     },
   ).show();
+    }
+void showDeleteDialog(
+    BuildContext context, Function onConfirm) {
+  AwesomeDialog(
+    btnOkColor: Colors.blue,
+    btnCancelColor: Colors.red,
+    context: context,
+    dialogType: DialogType.warning,
+    animType: AnimType.scale,
+    title: 'Confirm Deleting Task',
+    desc: 'Are you sure you want to Delet this Task?',
+    btnCancelOnPress: () {
+    },
+    btnOkOnPress: () {
+     onConfirm();
+     
+    },
+  ).show();
 }

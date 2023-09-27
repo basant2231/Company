@@ -4,10 +4,10 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 
-import '../models/taskmodel.dart';
+import '../models/TaskModel.dart';
+import '../models/tasks.dart';
 import '../presentation/theBloc/taskbloc/bloc/task_bloc.dart';
 import 'package:intl/intl.dart';
-
 
 class TaskViewModel {
   final String userIdd = FirebaseAuth.instance.currentUser!.uid;
@@ -18,8 +18,10 @@ class TaskViewModel {
     try {
       final String taskId = uuid.v4();
       final DateTime now = DateTime.now();
-      final String formattedDate = DateFormat.yMMMMd('en_US').add_Hm().format(now);
-      final CollectionReference tasksCollection = _firestore.collection('users').doc(userIdd).collection('tasks');
+      final String formattedDate =
+          DateFormat.yMMMMd('en_US').add_Hm().format(now);
+      final CollectionReference tasksCollection =
+          _firestore.collection('users').doc(userIdd).collection('tasks');
 
       await tasksCollection.doc(taskId).set({
         'personId': userIdd,
@@ -37,69 +39,74 @@ class TaskViewModel {
     }
   }
 
-Future<Either<String, List<Tasks>>> fetchTasksFromFirebase() async {
-  try {
-    final User? user = _auth.currentUser;
+  Future<List<TaskModel>> fetchTasks() async {
+    try {
+      final querySnapshotUsers = await _firestore.collection('users').get();
 
-    if (user != null) {
-      final QuerySnapshot userSnapshot = await _firestore
-          .collection('users')
-          .get();
+      final List<TaskModel> tasks = [];
 
-      final List<Tasks> tasksList = [];
+      for (final userDoc in querySnapshotUsers.docs) {
+        final userData = userDoc.data();
+        final userId = userData['uid'];
+        final imagePath = userData['imagePath']; // Retrieve imagePath here
 
-      for (final userDoc in userSnapshot.docs) {
-        final QuerySnapshot taskSnapshot = await userDoc
-            .reference
+        final tasksQuerySnapshot = await _firestore
+            .collection('users')
+            .doc(userId)
             .collection('tasks')
             .get();
 
-        tasksList.addAll(
-          taskSnapshot.docs.map((doc) => Tasks.fromJson(doc.data() as Map<String, dynamic>)),
-        );
+        for (final taskDoc in tasksQuerySnapshot.docs) {
+          final taskData = taskDoc.data();
+
+          final task = TaskModel(
+            taskId: taskDoc.id,
+            taskTitle: taskData['taskTitle'] ?? '',
+            taskDescription: taskData['taskDescription'] ?? '',
+            authorName: userData['fullName'] ?? '',
+            authorPosition: userData['position'] ?? '',
+            taskCategory: taskData['taskCategory'] ?? '',
+            taskDeadlineDate: taskData['taskDeadlineDate'] ?? '',
+            taskImage: imagePath ?? '', // Use imagePath from userData
+            isDone: taskData['isDone'] ?? false,
+            taskBeginningDate: taskData['taskBeginningDate'] ??
+                '', // Retrieve taskBeginningDate
+          );
+
+          tasks.add(task);
+        }
       }
 
-      return right(tasksList);
-    } else {
-      return left('User not authenticated.');
+      return tasks;
+    } catch (e) {
+      print('Error fetching tasks: $e');
+      throw e.toString();
     }
-  } catch (e) {
-    return left('Firebase Fetch Error: $e');
   }
-}
-//i want also to go to every user user and go to every document and to get information fullName imagePath phoneNumber position
-  Future<Either<String, bool>> deleteTaskFromFirebase(String taskId) async {
+
+ Future<Either<String, String>> deleteTask(String taskId) async {
     try {
-      final User? user = _auth.currentUser;
+      final DocumentReference taskDocRef =
+          _firestore.collection('users').doc(userIdd).collection('tasks').doc(taskId);
 
-      if (user != null) {
-        final DocumentReference taskRef = _firestore
-            .collection('users')
-            .doc(user.uid)
-            .collection('tasks')
-            .doc(taskId);
+      final DocumentSnapshot taskDoc = await taskDocRef.get();
+      if (!taskDoc.exists) {
+        return left('Task not found'); // Task with the given ID doesn't exist
+      }
 
-        final DocumentSnapshot taskSnapshot = await taskRef.get();
+      final Map<String, dynamic> taskData = taskDoc.data() as Map<String, dynamic>;
 
-        if (taskSnapshot.exists) {
-          await taskRef.delete();
-          return right(true); // Deletion was successful
-        } else {
-          return left('Task does not exist.');
-        }
+      // Check if the current user is the owner of the task
+      if (taskData['personId'] == userIdd) {
+        // User is the owner, allow deletion
+        await taskDocRef.delete();
+        return right('Task deleted successfully');
       } else {
-        return left('User not authenticated.');
+        // User is not the owner, do not allow deletion
+        return left('Permission denied: You cannot delete this task');
       }
     } catch (e) {
-      return left('Firebase Delete Error: $e');
+      return left('Task Deletion Error: $e');
     }
   }
 }
-
-
-
-
-
-
-
-// Query<Map<String, dynamic>> querySnapshot=await _firestore.collection('users').where("uid",isEqualTo:_auth.currentUser!.uid );
