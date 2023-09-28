@@ -3,9 +3,7 @@ import 'package:company/features/presentation/widgets/ScaffoldUtils/drawer.dart'
 import 'package:company/features/presentation/widgets/Grid&List/taskWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../core/route_manager.dart';
 import '../theBloc/taskbloc/bloc/task_bloc.dart';
-
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 class TaskScreen extends StatefulWidget {
   const TaskScreen({Key? key}) : super(key: key);
@@ -23,10 +21,9 @@ class _TaskScreenState extends State<TaskScreen> {
     super.initState();
     _taskBloc = BlocProvider.of<TaskBloc>(context);
     _taskBloc.add(FetchTasksEvent());
-    _refreshTasks;
   }
 
-  Future<void> _refreshTasks() async {
+  void _refreshData() {
     _taskBloc.add(FetchTasksEvent());
   }
 
@@ -35,17 +32,18 @@ class _TaskScreenState extends State<TaskScreen> {
     return Scaffold(
       key: _homeKey,
       drawer: const MyDrawer(),
-      body: RefreshIndicator(
-        onRefresh: _refreshTasks,
+      body: BlocListener<TaskBloc, TaskState>(
+        listener: (context, state) {},
         child: BlocBuilder<TaskBloc, TaskState>(
           builder: (context, state) {
             if (state is TaskFetchingLoadingState) {
-              return const Center(
+              return Center(
                 child: CircularProgressIndicator(),
               );
             } else if (state is TaskFetchSuccessState) {
               final tasks = state.tasks;
               final uniqueKey = ObjectKey(tasks);
+
               return Column(
                 children: [
                   Expanded(
@@ -82,8 +80,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             isDone: task.isDone,
                           );
                         },
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           childAspectRatio: 0.69,
                           crossAxisCount: 2,
                           crossAxisSpacing: 5,
@@ -98,12 +95,8 @@ class _TaskScreenState extends State<TaskScreen> {
                 child: Text('Error: ${state.error}'),
               );
             } else {
-              return Center(
-                child: ElevatedButton(
-                  onPressed: _refreshTasks,
-                  child: Text('Refresh'),
-                ),
-              );
+              _refreshData();
+              return Center(child: CircularProgressIndicator());
             }
           },
         ),

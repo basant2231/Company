@@ -446,7 +446,7 @@ class RegisterScreenState extends State<RegisterScreen>
                           password: _passTextController.text,
                           phoneNumber: _phoneTextController.text,
                           position: _positionCPTextController.text,
-                          imageFile: imageFile!,
+                          imageFile: imageFile,
                         );
 
                         BlocProvider.of<AuthBloc>(context).add(
