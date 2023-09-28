@@ -4,7 +4,9 @@ import 'package:company/features/presentation/widgets/Grid&List/taskWidget.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../theBloc/taskbloc/bloc/task_bloc.dart';
+import '../widgets/Dialogs/errorsuccessDialog.dart';
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
 class TaskScreen extends StatefulWidget {
   const TaskScreen({Key? key}) : super(key: key);
 
@@ -14,13 +16,14 @@ class TaskScreen extends StatefulWidget {
 
 class _TaskScreenState extends State<TaskScreen> {
   late TaskBloc _taskBloc;
-  GlobalKey<FormState> _homeKey = GlobalKey<FormState>(debugLabel: '_homeScreenkey');
+  final GlobalKey<FormState> _homeKey =
+      GlobalKey<FormState>(debugLabel: '_homeScreenkey');
 
   @override
   void initState() {
     super.initState();
     _taskBloc = BlocProvider.of<TaskBloc>(context);
-    _taskBloc.add(FetchTasksEvent());
+   // _taskBloc.add(FetchTasksEvent());
   }
 
   void _refreshData() {
@@ -33,11 +36,17 @@ class _TaskScreenState extends State<TaskScreen> {
       key: _homeKey,
       drawer: const MyDrawer(),
       body: BlocListener<TaskBloc, TaskState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is TaskDeleteFailureState) {
+            _refreshData();
+            showFailureDialog(context, state.error, () {});
+          }
+        },
         child: BlocBuilder<TaskBloc, TaskState>(
           builder: (context, state) {
             if (state is TaskFetchingLoadingState) {
-              return Center(
+                _refreshData();
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (state is TaskFetchSuccessState) {
@@ -80,7 +89,8 @@ class _TaskScreenState extends State<TaskScreen> {
                             isDone: task.isDone,
                           );
                         },
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           childAspectRatio: 0.69,
                           crossAxisCount: 2,
                           crossAxisSpacing: 5,
@@ -90,13 +100,9 @@ class _TaskScreenState extends State<TaskScreen> {
                   ),
                 ],
               );
-            } else if (state is TaskFetchFailureState) {
-              return Center(
-                child: Text('Error: ${state.error}'),
-              );
             } else {
               _refreshData();
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
           },
         ),

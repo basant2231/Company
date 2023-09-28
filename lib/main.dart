@@ -11,7 +11,7 @@ import 'features/presentation/theBloc/taskbloc/bloc/task_bloc.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import 'dart:async'; // Import the async library
+// Import the async library
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
                 create: (context) => AuthBloc(),
               ),
               BlocProvider<TaskBloc>(
-                create: (context) => TaskBloc(),
+                create: (context) => TaskBloc()..add(FetchTasksEvent()),
               ),
               BlocProvider(
                 create: (context) => ProfileBloc()..add(FetchProfileEvent()),

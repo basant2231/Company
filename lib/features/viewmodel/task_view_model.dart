@@ -91,7 +91,7 @@ class TaskViewModel {
 
       final DocumentSnapshot taskDoc = await taskDocRef.get();
       if (!taskDoc.exists) {
-        return left('Task not found'); // Task with the given ID doesn't exist
+        return left('Permission denied: Only the creator of this task can delete it.'); // Task with the given ID doesn't exist
       }
 
       final Map<String, dynamic> taskData = taskDoc.data() as Map<String, dynamic>;

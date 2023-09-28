@@ -43,6 +43,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   }
 
   // Separate event handler for DeleteTaskEvent
+  
   void _handleDeleteTaskEvent(
       DeleteTaskEvent event, Emitter<TaskState> emit) async {
    // emit(TaskDeletingLoadingState());

@@ -63,3 +63,17 @@ void showDeleteDialog(
     },
   ).show();
 }
+
+void showFailureDialog(BuildContext context, String error,void Function()? ontap) {
+    AwesomeDialog(
+      btnOkColor: Colors.blue,
+      btnCancelColor: Colors.red,
+      context: context,
+      dialogType: DialogType.infoReverse,
+      animType: AnimType.scale,
+      title: 'Error Deleting the Task',
+      desc: error,
+      btnCancelOnPress: () {},
+      btnOkOnPress: ontap,
+    ).show();
+  }
