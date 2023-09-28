@@ -30,6 +30,7 @@ class TaskViewModel {
         'taskDescription': event.tasks.taskDescription,
         'taskDeadlineDate': event.tasks.taskDeadlineDate,
         'taskBeginningDate': formattedDate,
+        'isDone': false, // Set the initial value of isDone to false
       });
 
       final taskModel = event.tasks;
@@ -109,4 +110,29 @@ class TaskViewModel {
       return left('Task Deletion Error: $e');
     }
   }
+
+  Future<Either<String, String>> updateTaskStatus(String taskId, bool isDone) async {
+  try {
+    final DocumentReference taskDocRef = _firestore.collection('users').doc(userIdd).collection('tasks').doc(taskId);
+
+    final DocumentSnapshot taskDoc = await taskDocRef.get();
+    if (!taskDoc.exists) {
+      return left('Task not found'); // Task with the given ID doesn't exist
+    }
+
+    final Map<String, dynamic> taskData = taskDoc.data() as Map<String, dynamic>;
+
+    // Check if the current user is the owner of the task
+    if (taskData['personId'] == userIdd) {
+      // User is the owner, update the isDone field
+      await taskDocRef.update({'isDone': isDone});
+      return right('Task status updated successfully');
+    } else {
+      // User is not the owner, do not allow the update
+      return left('Permission denied: You cannot update the task status');
+    }
+  } catch (e) {
+    return left('Task Status Update Error: $e');
+  }
+}
 }

@@ -14,7 +14,9 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   TaskBloc() : super(TaskInitial()) {
     on<AddTaskEvent>(_handleAddTaskEvent);
     on<FetchTasksEvent>(_handleFetchTasksEvent);
-    on<DeleteTaskEvent>(_handleDeleteTaskEvent); // Use DeleteTaskEvent here
+    on<DeleteTaskEvent>(_handleDeleteTaskEvent); 
+    on<UpdateTaskStatusEvent>(_handleUpdateTaskStatusEvent); 
+    
   }
 
   void _handleAddTaskEvent(AddTaskEvent event, Emitter<TaskState> emit) async {
@@ -56,6 +58,22 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       },
       (_) {
         emit(TaskDeleteSuccessState());
+      },
+    );
+  }
+
+ void _handleUpdateTaskStatusEvent(
+      UpdateTaskStatusEvent event, Emitter<TaskState> emit) async {
+    emit(TaskUpdateStatusLoadingState());
+
+    final result = await _taskViewModel.updateTaskStatus(event.taskId, event.isDone);
+
+    result.fold(
+      (error) {
+        emit(TaskUpdateStatusFailureState(error: error));
+      },
+      (_) {
+        emit(TaskUpdateStatusSuccessState());
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:company/features/presentation/widgets/Dialogs/errorsuccessDialog.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:image_cropper/image_cropper.dart';
@@ -50,5 +51,29 @@ class LaunchUtilsFunctions {
     }
   }
 
- 
+}
+
+ String calculateTimeLeft(String deadlineDate) {
+  try {
+    final now = DateTime.now();
+    
+    // Define the date format you expect from the date picker dialog
+    final expectedDateFormat = DateFormat('yyyy-MM-dd'); // Adjust the format as needed
+    
+    // Parse the date using the expected format
+    final parsedDeadlineDate = expectedDateFormat.parse(deadlineDate);
+
+    if (now.isBefore(parsedDeadlineDate)) {
+      final difference = parsedDeadlineDate.difference(now);
+      final days = difference.inDays;
+      final hours = difference.inHours.remainder(24);
+      final minutes = difference.inMinutes.remainder(60);
+
+      return 'Still have time: $days days, $hours hours, $minutes minutes';
+    } else {
+      return 'No time left!';
+    }
+  } catch (e) {
+    return 'Invalid date format: $deadlineDate';
+  }
 }

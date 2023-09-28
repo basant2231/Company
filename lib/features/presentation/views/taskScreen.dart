@@ -18,7 +18,10 @@ class _TaskScreenState extends State<TaskScreen> {
   late TaskBloc _taskBloc;
   final GlobalKey<FormState> _homeKey =
       GlobalKey<FormState>(debugLabel: '_homeScreenkey');
-
+void _updateTaskStatus(String taskId, bool isDone) {
+    // Dispatch an event to update the task status using Bloc or another method.
+    _taskBloc.add(UpdateTaskStatusEvent(taskId: taskId, isDone: isDone));
+  }
   @override
   void initState() {
     super.initState();
@@ -39,7 +42,7 @@ class _TaskScreenState extends State<TaskScreen> {
         listener: (context, state) {
           if (state is TaskDeleteFailureState) {
             _refreshData();
-            showFailureDialog(context, state.error, () {});
+            showFailureDialog(context, state.error);
           }
         },
         child: BlocBuilder<TaskBloc, TaskState>(
@@ -78,6 +81,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                     imagee: task.taskImage,
                                     beginningdate: task.taskBeginningDate,
                                     taskId: task.taskId,
+                                    
                                   ),
                                 ),
                               );
@@ -87,6 +91,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             taskId: task.taskId,
                             uploadedBy: task.authorName,
                             isDone: task.isDone,
+                            
                           );
                         },
                         gridDelegate:

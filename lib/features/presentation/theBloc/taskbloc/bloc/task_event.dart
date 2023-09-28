@@ -25,3 +25,13 @@ class DeleteTaskEvent extends TaskEvent {
 
   const DeleteTaskEvent(this.taskId);
 }
+
+class UpdateTaskStatusEvent extends TaskEvent {
+  final String taskId;
+  final bool isDone;
+
+  UpdateTaskStatusEvent({required this.taskId, required this.isDone});
+
+  @override
+  List<Object> get props => [taskId, isDone];
+}

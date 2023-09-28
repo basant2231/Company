@@ -56,3 +56,16 @@ class TaskDeleteFailureState extends TaskState {
   @override
   List<Object> get props => [error];
 }
+
+class TaskUpdateStatusLoadingState extends TaskState {}
+
+class TaskUpdateStatusSuccessState extends TaskState {}
+
+class TaskUpdateStatusFailureState extends TaskState {
+  final String error;
+
+  TaskUpdateStatusFailureState({required this.error});
+
+  @override
+  List<Object> get props => [error];
+}

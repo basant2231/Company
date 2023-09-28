@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/images_manager.dart';
-import '../../../../core/route_manager.dart';
 
 class TaskWidget extends StatelessWidget {
   final String taskTitle;
@@ -12,7 +11,7 @@ class TaskWidget extends StatelessWidget {
   final String uploadedBy;
   final bool isDone;
   void Function()? onTap;
-  
+
   TaskWidget({
     Key? key,
     required this.taskTitle,
@@ -25,6 +24,10 @@ class TaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AssetImage imageAsset = isDone
+        ? const AssetImage(MyImages.checkmark)
+        : const AssetImage(MyImages.clock);
+
     return GestureDetector(
       onTap: onTap,
       child: ClipRRect(
@@ -42,10 +45,7 @@ class TaskWidget extends StatelessWidget {
                     width: 100,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50.0),
-                      child: Image.asset(
-                        isDone ? MyImages.checkmark : MyImages.clock,
-                        fit: BoxFit.contain,
-                      ),
+                      child: Image(image: imageAsset, fit: BoxFit.contain),
                     ),
                   ),
                   const SizedBox(height: 4.0),
@@ -55,7 +55,10 @@ class TaskWidget extends StatelessWidget {
                         taskTitle,
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[400]!),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[400]!,
+                        ),
                       ),
                       const SizedBox(height: 4.0),
                       Text(
@@ -85,6 +88,10 @@ class TaskWidget extends StatelessWidget {
 
 Color getRandomBlueColor() {
   final List<Color> blueShades = [
+  Colors.indigoAccent.shade400,
+  Colors.indigoAccent.shade700,
+  Colors.indigoAccent.shade200,
+  
     Colors.indigo[300]!,
     Colors.indigo[400]!,
     Colors.indigo[500]!,

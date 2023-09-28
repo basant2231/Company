@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:company/core/constants/colors_managers.dart';
 
 import '../../../core/constants/textstyle_manager.dart';
-import '../../../core/route_manager.dart';
+import '../../../core/helpingFunctions.dart';
 import '../theBloc/taskbloc/bloc/task_bloc.dart';
 import '../widgets/Dialogs/errorsuccessDialog.dart';
 import '../widgets/Others/comments.dart';
@@ -19,18 +19,19 @@ class TaskDetails extends StatefulWidget {
   String? imagee;
   String? beginningdate;
   String? taskId;
-  TaskDetails(
-      {Key? key,
-      this.taskTitle,
-      this.authorname,
-      this.authorposition,
-      this.taskdescritoon,
-      this.deadlinedate,
-      this.category,
-      this.imagee,
-      this.taskId,
-      this.beginningdate})
-      : super(key: key);
+
+  TaskDetails({
+    Key? key,
+    this.taskTitle,
+    this.authorname,
+    this.authorposition,
+    this.taskdescritoon,
+    this.deadlinedate,
+    this.category,
+    this.imagee,
+    this.beginningdate,
+    this.taskId,
+  }) : super(key: key);
 
   @override
   _TaskDetailsState createState() => _TaskDetailsState();
@@ -38,8 +39,10 @@ class TaskDetails extends StatefulWidget {
 
 class _TaskDetailsState extends State<TaskDetails> {
   bool _isCommenting = false;
+  bool _isTaskDone = false;
 
   final TextEditingController _commentController = TextEditingController();
+
   @override
   void dispose() {
     super.dispose();
@@ -77,25 +80,22 @@ class _TaskDetailsState extends State<TaskDetails> {
                       ),
                     ),
                     IconButton(
-                        onPressed: () {
-                          setState(() {
-                            showDeleteDialog(context, () {
-                              
-                                Navigator.pop(context);
-                                
-                            
-                              context
-                                  .read<TaskBloc>()
-                                  .add(DeleteTaskEvent(widget.taskId!));
-
-                            });
+                      onPressed: () {
+                        setState(() {
+                          showDeleteDialog(context, () {
+                            Navigator.pop(context);
+                            context
+                                .read<TaskBloc>()
+                                .add(DeleteTaskEvent(widget.taskId!));
                           });
-                        },
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                          size: 35,
-                        )),
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                        size: 35,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -197,10 +197,20 @@ class _TaskDetailsState extends State<TaskDetails> {
                         height: 10,
                       ),
                       Center(
-                        child: Text(
-                            true ? 'Still have enough time' : "No time left",
-                            style: Mytextstyle.contactdetailsTextStyle2
-                                .copyWith(color: Colors.green)),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            calculateTimeLeft(widget.deadlinedate!),
+                            style: TextStyle(
+                              color: calculateTimeLeft(widget.deadlinedate!) ==
+                                      'No time left!'
+                                  ? Colors.red
+                                  : Colors.green,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 21,
+                            ),
+                          ),
+                        ),
                       ),
                       const SizedBox(
                         height: 10,
@@ -211,7 +221,9 @@ class _TaskDetailsState extends State<TaskDetails> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Text('Done state:', style: Mytextstyle.detailsTextStyle1),
+                      Text('Done state:',
+                          style: Mytextstyle.detailsTextStyle1.copyWith(
+                              fontWeight: FontWeight.bold, fontSize: 25)),
                       const SizedBox(
                         height: 10,
                       ),
@@ -220,8 +232,29 @@ class _TaskDetailsState extends State<TaskDetails> {
                           Flexible(
                             child: TextButton(
                               child: Text('Done',
-                                  style: Mytextstyle.contactdetailsTextStyle2),
-                              onPressed: () {},
+                                  style: Mytextstyle.contactdetailsTextStyle2
+                                      .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    decoration: _isTaskDone
+                                        ? TextDecoration.underline
+                                        : TextDecoration.none,
+                                    color: _isTaskDone
+                                        ? Colors.green
+                                        : Colors.black,
+                                  )),
+                              onPressed: () {
+                                setState(() {
+                                  _isTaskDone = true;
+                                });
+
+                                context.read<TaskBloc>().add(
+                                      UpdateTaskStatusEvent(
+                                        taskId: widget.taskId!,
+                                        isDone: true,
+                                      ),
+                                    );
+                              },
                             ),
                           ),
                           const Opacity(
@@ -239,9 +272,26 @@ class _TaskDetailsState extends State<TaskDetails> {
                               child: Text('Not done',
                                   style: Mytextstyle.contactdetailsTextStyle2
                                       .copyWith(
-                                          decoration:
-                                              TextDecoration.underline)),
-                              onPressed: () {},
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          decoration: !_isTaskDone
+                                              ? TextDecoration.underline
+                                              : TextDecoration.none,
+                                          color: !_isTaskDone
+                                              ? Colors.red
+                                              : Colors.black)),
+                              onPressed: () {
+                                setState(() {
+                                  _isTaskDone = false;
+                                });
+
+                                context.read<TaskBloc>().add(
+                                      UpdateTaskStatusEvent(
+                                        taskId: widget.taskId!,
+                                        isDone: false,
+                                      ),
+                                    );
+                              },
                             ),
                           ),
                           const Opacity(
@@ -411,7 +461,7 @@ class _TaskDetailsState extends State<TaskDetails> {
                               itemCount: tasks.length,
                             );
                           } else {
-                            return const CircularProgressIndicator();
+                            return Container();
                           }
                         },
                       ),
