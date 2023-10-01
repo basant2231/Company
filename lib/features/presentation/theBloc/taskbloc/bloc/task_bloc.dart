@@ -1,22 +1,27 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 
 import 'package:equatable/equatable.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../../../models/TaskModel.dart';
+import '../../../../models/commentModel.dart';
 import '../../../../models/tasks.dart';
 import '../../../../viewmodel/task_view_model.dart';
 
 part 'task_event.dart';
 part 'task_state.dart';
+
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final TaskViewModel _taskViewModel = TaskViewModel();
 
   TaskBloc() : super(TaskInitial()) {
     on<AddTaskEvent>(_handleAddTaskEvent);
     on<FetchTasksEvent>(_handleFetchTasksEvent);
-    on<DeleteTaskEvent>(_handleDeleteTaskEvent); 
-    on<UpdateTaskStatusEvent>(_handleUpdateTaskStatusEvent); 
-    
+    on<DeleteTaskEvent>(_handleDeleteTaskEvent);
+    on<UpdateTaskStatusEvent>(_handleUpdateTaskStatusEvent);
+    on<AddCommentEvent>(_handleAddCommentEvent);
+    on<FetchCommentsEvent>(_handleFetchCommentsEvent);
   }
 
   void _handleAddTaskEvent(AddTaskEvent event, Emitter<TaskState> emit) async {
@@ -45,10 +50,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   }
 
   // Separate event handler for DeleteTaskEvent
-  
+
   void _handleDeleteTaskEvent(
       DeleteTaskEvent event, Emitter<TaskState> emit) async {
-   // emit(TaskDeletingLoadingState());
+    // emit(TaskDeletingLoadingState());
 
     final result = await _taskViewModel.deleteTask(event.taskId);
 
@@ -62,11 +67,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     );
   }
 
- void _handleUpdateTaskStatusEvent(
+  void _handleUpdateTaskStatusEvent(
       UpdateTaskStatusEvent event, Emitter<TaskState> emit) async {
     emit(TaskUpdateStatusLoadingState());
 
-    final result = await _taskViewModel.updateTaskStatus(event.taskId, event.isDone);
+    final result =
+        await _taskViewModel.updateTaskStatus(event.taskId, event.isDone);
 
     result.fold(
       (error) {
@@ -77,4 +83,40 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       },
     );
   }
+
+  void _handleAddCommentEvent(
+      AddCommentEvent event, Emitter<TaskState> emit) async {
+    emit(CommentLoading());
+
+    final addedCommentEither =
+        await _taskViewModel.addCommentToTask(event.taskId, event.comment);
+
+    addedCommentEither.fold(
+      (error) {
+        emit(CommentError(error: error));
+      },
+      (addedComment) {
+        // Don't call the addCommentToTask function again here
+        emit(CommentAdded(comment: addedComment));
+      },
+    );
+  }
+  void _handleFetchCommentsEvent(
+      FetchCommentsEvent event, Emitter<TaskState> emit) async {
+    emit(FetchingCommentsLoadingState());
+
+    final addedCommentEither =
+        await _taskViewModel.getCommentsForTask(event.taskId);
+
+    addedCommentEither.fold(
+      (error) {
+        emit(FetchingCommentsErrorState(error));
+      },
+      (fetchingcomment) {
+        // Don't call the addCommentToTask function again here
+       emit(FetchingCommentsLoadedState(comments: fetchingcomment));
+      },
+    );
+  }
+
 }

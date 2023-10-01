@@ -35,3 +35,17 @@ class UpdateTaskStatusEvent extends TaskEvent {
   @override
   List<Object> get props => [taskId, isDone];
 }
+
+class AddCommentEvent extends TaskEvent {
+  final String taskId;
+  final Comment comment;
+
+  AddCommentEvent({required this.comment, required String this.taskId});
+}
+
+
+class FetchCommentsEvent extends TaskEvent {
+  final String taskId;
+
+  FetchCommentsEvent(this.taskId);
+}

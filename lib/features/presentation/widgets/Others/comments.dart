@@ -83,9 +83,9 @@ class CommentWidget extends StatelessWidget {
                   ),
                   Text(
                     commentBody,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontStyle: FontStyle.italic,
-                        color: Colors.grey.shade700),
+                        color: Colors.red),
                   ),
                 ],
               ),

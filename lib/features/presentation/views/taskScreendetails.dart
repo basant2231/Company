@@ -1,10 +1,14 @@
+import 'package:company/features/presentation/views/taskScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:company/core/constants/colors_managers.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/constants/textstyle_manager.dart';
 import '../../../core/helpingFunctions.dart';
+import '../../models/Registermodel.dart';
+import '../../models/commentModel.dart';
 import '../theBloc/taskbloc/bloc/task_bloc.dart';
 import '../widgets/Dialogs/errorsuccessDialog.dart';
 import '../widgets/Others/comments.dart';
@@ -40,7 +44,7 @@ class TaskDetails extends StatefulWidget {
 class _TaskDetailsState extends State<TaskDetails> {
   bool _isCommenting = false;
   bool _isTaskDone = false;
-
+  List<Comment> _allcomments2 = [];
   final TextEditingController _commentController = TextEditingController();
 
   @override
@@ -49,9 +53,12 @@ class _TaskDetailsState extends State<TaskDetails> {
     _commentController.dispose();
   }
 
-  void fetchTasksWithCondition() {
-    context.read<TaskBloc>().add(FetchTasksEvent());
+  @override
+  void initState() {
+    context.read<TaskBloc>().add(FetchCommentsEvent(widget.taskId!));
   }
+
+  RegistrationModel? registerationmodel;
 
   @override
   Widget build(BuildContext context) {
@@ -371,24 +378,68 @@ class _TaskDetailsState extends State<TaskDetails> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          MaterialButton(
-                                            onPressed: () async {},
-                                            color: MyColors.llightblue,
-                                            elevation: 10,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(13),
-                                              side: BorderSide.none,
-                                            ),
-                                            child: const Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 14,
+                                          BlocListener<TaskBloc, TaskState>(
+                                            listener: (context, state) {
+                                              if (state is CommentLoading) {
+                                                const CircularProgressIndicator();
+                                              } else if (state
+                                                  is CommentError) {
+                                                Fluttertoast.showToast(
+                                                  msg: state.error,
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor: Colors.red,
+                                                  textColor: Colors.white,
+                                                  fontSize: 16.0,
+                                                );
+                                                print(state.error);
+                                              } else if (state
+                                                  is CommentAdded) {}
+                                            },
+                                            child: MaterialButton(
+                                              onPressed: () {
+                                                context.read<TaskBloc>().add(
+                                                      AddCommentEvent(
+                                                        comment: Comment(
+                                                          commentId:
+                                                              widget.taskId!,
+                                                          commentBody:
+                                                              _commentController
+                                                                  .text,
+                                                          commenterImageUrl:
+                                                              commenterurl,
+                                                          commenterName:
+                                                              commentername,
+                                                        ),
+                                                        taskId: widget.taskId!,
+                                                      ),
+                                                    );
+                                                //true
+
+                                                context.read<TaskBloc>().add(
+                                                    FetchCommentsEvent(
+                                                        widget.taskId!));
+                                                _commentController.clear();
+                                              },
+                                              color: MyColors.llightblue,
+                                              elevation: 10,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(13),
+                                                side: BorderSide.none,
                                               ),
-                                              child: Text(
-                                                'Post',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
+                                              child: const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 14,
+                                                ),
+                                                child: Text(
+                                                  'Post',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -435,40 +486,57 @@ class _TaskDetailsState extends State<TaskDetails> {
                                 ),
                               ),
                       ),
-                      BlocBuilder<TaskBloc, TaskState>(
-                        builder: (context, state) {
-                          if (state is TaskFetchSuccessState) {
-                            final tasks = state.tasks;
-                            return ListView.separated(
-                              reverse: true,
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (ctx, index) {
-                                final task = tasks[index];
-                                return CommentWidget(
-                                  commentId: '',
-                                  commentBody: '',
-                                  commenterId: '',
-                                  commenterName: '',
-                                  commenterImageUrl: '',
-                                );
-                              },
-                              separatorBuilder: (ctx, index) {
-                                return const Divider(
-                                  thickness: 1,
-                                );
-                              },
-                              itemCount: tasks.length,
-                            );
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
                     ],
                   ),
                 ),
               ),
+            ),
+            BlocBuilder<TaskBloc, TaskState>(
+              builder: (context, state) {
+                if (state is FetchingCommentsLoadedState) {
+                  _allcomments2 = state.comments;
+                  context
+                      .read<TaskBloc>()
+                      .add(FetchCommentsEvent(widget.taskId!));
+                  return Container();
+                } else if (state is FetchingCommentsErrorState) {
+                  Fluttertoast.showToast(
+                    msg: '@@@@@@@@@@@@@@${state.error}',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                  print(state.error);
+                  return Container();
+                } else {
+                  return Container();
+                }
+              },
+            ),
+            ListView.separated(
+              reverse: true,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (ctx, index) {
+                print('Building item $index');
+                final comments = _allcomments2[index];
+                return CommentWidget(
+                  commentId: comments.commentId!,
+                  commentBody: comments.commentBody!,
+                  commenterId: '',
+                  commenterName: comments.commenterName!,
+                  commenterImageUrl: comments.commenterImageUrl!,
+                );
+              },
+              separatorBuilder: (ctx, index) {
+                return const Divider(
+                  thickness: 1,
+                );
+              },
+              itemCount: _allcomments2.length,
             )
           ],
         ),

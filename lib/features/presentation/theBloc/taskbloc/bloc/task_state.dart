@@ -2,19 +2,20 @@ part of 'task_bloc.dart';
 
 class TaskState extends Equatable {
   const TaskState();
-  
+
   @override
   List<Object> get props => [];
 }
 
- class TaskInitial extends TaskState {}
+class TaskInitial extends TaskState {}
+
 class TaskAddedSuccessState extends TaskState {
- final  Tasks tasks;
+  final Tasks tasks;
   const TaskAddedSuccessState({
     required this.tasks,
   });
-  
 }
+
 class TaskAddedLoadingState extends TaskState {}
 
 class TaskAddedFailureState extends TaskState {
@@ -22,10 +23,6 @@ class TaskAddedFailureState extends TaskState {
 
   const TaskAddedFailureState({required this.error});
 }
-
-
-
-
 
 class TaskFetchingLoadingState extends TaskState {}
 
@@ -41,12 +38,9 @@ class TaskFetchFailureState extends TaskState {
   const TaskFetchFailureState({required this.error});
 }
 
-
 class TaskDeletingLoadingState extends TaskState {}
 
-class TaskDeleteSuccessState extends TaskState {
- 
-}
+class TaskDeleteSuccessState extends TaskState {}
 
 class TaskDeleteFailureState extends TaskState {
   final String error;
@@ -68,4 +62,34 @@ class TaskUpdateStatusFailureState extends TaskState {
 
   @override
   List<Object> get props => [error];
+}
+
+class CommentLoading extends TaskState {}
+
+class CommentAdded extends TaskState {
+  final Comment comment;
+  CommentAdded({
+    required this.comment,
+  });
+}
+
+class CommentError extends TaskState {
+  final String error;
+  CommentError({
+    required this.error,
+  });
+}
+
+class FetchingCommentsLoadingState extends TaskState {}
+
+class FetchingCommentsLoadedState extends TaskState {
+  final List<Comment> comments;
+
+  FetchingCommentsLoadedState({required this.comments});
+}
+
+class FetchingCommentsErrorState extends TaskState {
+  final String error;
+
+  FetchingCommentsErrorState(this.error);
 }

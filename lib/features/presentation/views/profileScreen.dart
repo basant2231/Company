@@ -1,4 +1,5 @@
 import 'package:company/features/presentation/theBloc/bloc/auth_bloc.dart';
+import 'package:company/features/presentation/views/taskScreen.dart';
 import 'package:company/features/presentation/widgets/ScaffoldUtils/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,19 +13,21 @@ import '../widgets/Buttons/logOutButton.dart';
 import '../widgets/Dialogs/errorsuccessDialog.dart';
 import '../widgets/Others/socialInfo.dart';
 
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
-  
 }
+
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     ProfileBloc().add(FetchProfileEvent());
     super.initState();
   }
+
   var titleTextStyle = const TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.bold,
@@ -48,9 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (state is ProfileLoadingState) {
           return const Scaffold(
             drawer: MyDrawer(),
-            body: Center(
-              child: CircularProgressIndicator()
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
         } else if (state is ProfileSuccessState) {
           final registrationModel = state.profile;
@@ -60,8 +61,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           email = registrationModel.emailAddress;
           phoneNumber = registrationModel.phoneNumber;
           position = registrationModel.position;
-          imageUrl = registrationModel.imagePath as String; // Assign imageUrl or an empty string if null
-
+          imageUrl = registrationModel.imagePath
+              as String; // Assign imageUrl or an empty string if null
+          commentername = name;
+          commenterurl = imageUrl;
           return Scaffold(
             drawer: const MyDrawer(),
             body: SingleChildScrollView(
@@ -197,13 +200,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             decoration: BoxDecoration(
                               border: Border.all(
                                 width: 5,
-                                color: Theme.of(context).scaffoldBackgroundColor,
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
                               ),
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                image: 
-                                     NetworkImage(imageUrl)
-                                  ,
+                                image: NetworkImage(imageUrl),
                                 fit: BoxFit.fill,
                               ),
                             ),
