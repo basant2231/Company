@@ -77,11 +77,10 @@ class LoginScreenState extends State<LoginScreen>
             showErrorDialog(context, state.errorMessage);
           } else if (state is LoginSuccessState) {
             showSuccessDialog(context, 'Login successful!');
-           Future.delayed(const Duration(seconds: 3), () {
-        Navigator.pushReplacementNamed(context, Routes.layoutkey);
-      });
-
-          } 
+            Future.delayed(const Duration(seconds: 3), () {
+              Navigator.pushReplacementNamed(context, Routes.layoutkey);
+            });
+          }
         },
         child: _buildStack(context, size, authBloc),
       ),
@@ -285,6 +284,51 @@ class LoginScreenState extends State<LoginScreen>
                     Icon(
                       Icons.login,
                       color: MyColors.wwhite,
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              MaterialButton(
+                onPressed: () {
+               
+                    // Dispatch the login event with email and password
+                    authBloc.add(GoogleSigninEvent());
+                     Navigator.of(context)
+                              .pushNamed(Routes.layoutkey);
+                },
+                color: Colors.orangeAccent,
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(13),
+                  side: BorderSide.none,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 14),
+                      child: Text(
+                        'Login with Google',
+                        style: TextStyle(
+                          color: MyColors.rred,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        'assets/images/google2.png',
+                        height: 40,
+                        width: 40,
+                      ), // You can adjust the border radius as needed
                     )
                   ],
                 ),

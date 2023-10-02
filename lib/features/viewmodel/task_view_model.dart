@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:company/features/viewmodel/registration_view_model.dart';
 import 'package:dartz/dartz.dart';
@@ -161,6 +163,7 @@ class TaskViewModel {
       final addedCommentRef = await commentsCollectionRef.add(comment.toJson());
       final addedCommentDoc = await addedCommentRef.get();
 
+     
       // Create a Comment object from the added comment data
       final addedComment = Comment(
         commentId: commentId,
@@ -168,6 +171,7 @@ class TaskViewModel {
         commenterId: addedCommentDoc['commenterId'],
         commenterName: addedCommentDoc['commenterName'],
         commenterImageUrl: addedCommentDoc['commenterImageUrl'],
+        timestamp: DateFormat('yyyy-MM-dd').format(DateTime.now()),
       );
 
       return right(addedComment); // Pass the added comment to right() function
@@ -177,21 +181,18 @@ class TaskViewModel {
     }
   }
 
-  Future<Either<String, List<Comment>>> getCommentsForTask(
-      String commentId) async {
+  final _commentsController = StreamController<TaskState>.broadcast();
+
+  getCommentsForTask(String taskId) async {
     try {
-      final commentsList =
-          <Comment>[]; // Initialize an empty list to store comments
+      _commentsController
+          .add(FetchingCommentsLoadingState()); // Emit loading state
 
-      // Reference to the task's comments collection
       final commentsCollectionRef = _firestore.collection('comments');
+      final querySnapshot =
+          await commentsCollectionRef.where('taskId', isEqualTo: taskId).get();
 
-      // Get all comments from the comments collection where commentId is equal to taskDoc.id
-      final querySnapshot = await commentsCollectionRef
-          .where('commentId', isEqualTo: commentId)
-          .get();
-
-      // Convert the query snapshot to a list of Comment objects
+      final commentsList = <Comment>[];
       for (var doc in querySnapshot.docs) {
         final comment = Comment(
           commentId: doc.id,
@@ -201,18 +202,14 @@ class TaskViewModel {
           commenterImageUrl: doc['commenterImageUrl'],
         );
         commentsList.add(comment);
+        print(comment.commentId.toString());
       }
-      print('333333333333333333333333333333333333333333${commentId}');
-      print('4444444444444444444444444444444444444444444${userIdd}');
-      return right(
-          commentsList); // Pass the list of comments to right() function
+
+      _commentsController.add(FetchingCommentsLoadedState(
+          comments: commentsList)); // Emit loaded state
     } catch (e) {
-      return left(
-          'Error fetching comments: $e'); // Use Dartz's left() function to indicate failure
+      _commentsController
+          .add(FetchingCommentsErrorState(e.toString())); // Emit error state
     }
   }
 }
-//to describe the cloud firestore i have 2 collections users inside it there is 
-//documents that has fields one of them is commentId  and has a collection inside named tasks inside it alot
-//of documents and  and also i have beside the users collection a comments on that have 
-//documents i want if commentId == tasks id to fetch that comment

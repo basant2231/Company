@@ -25,6 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginEvent>(_handleLoginEvent);
     on<ForgotPasswordEvent>(_handleForgotPasswordEvent);
     on<LogOutEvent>(_handleLogoutEvent);
+    on<GoogleSigninEvent>(_handleGoogleSigninEvent);
   }
 
   void _handleCameraGalleryEvent(
@@ -109,6 +110,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
       (_) {
         emit(LogoutSuccessState());
+      },
+    );
+  }
+  void _handleGoogleSigninEvent(
+    GoogleSigninEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(LogoutLoadingState());
+    final result = await _loginViewModel.signInWithGoogle();
+
+    result.fold(
+      (error) {
+        emit(LoginGoogleFailureState(errorMessage: error));
+      },
+      (userCredential) {
+        emit(LoginGoogleSuccessState(userCredential: userCredential));
       },
     );
   }

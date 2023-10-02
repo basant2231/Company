@@ -98,3 +98,22 @@ class LogoutErrorState extends AuthState {
 
 class LogoutSuccessState extends AuthState {}
 class LogoutLoadingState extends AuthState {}
+
+
+class LoginGoogleLoadingState extends AuthState {}
+
+class LoginGoogleSuccessState extends AuthState {
+  final UserCredential userCredential;
+
+  LoginGoogleSuccessState({required this.userCredential});
+}
+
+
+class LoginGoogleFailureState extends AuthState {
+  final String errorMessage;
+
+  const LoginGoogleFailureState({required this.errorMessage});
+
+  @override
+  List<Object?> get props => [errorMessage];
+}

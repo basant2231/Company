@@ -29,14 +29,14 @@ class MyApp extends StatefulWidget {
 RegistrationModel? registrationModel;
 
 class _MyAppState extends State<MyApp> {
-   final ProfileBloc _profileBloc = ProfileBloc();
+  final ProfileBloc _profileBloc = ProfileBloc();
 
   @override
   void initState() {
-   super.initState();
+    super.initState();
     _profileBloc.add(FetchProfileEvent());
-    
   }
+
   Widget build(BuildContext context) {
     return StreamBuilder<ConnectivityResult>(
       stream: Connectivity().onConnectivityChanged,

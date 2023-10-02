@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 
@@ -101,22 +103,23 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       },
     );
   }
-  void _handleFetchCommentsEvent(
-      FetchCommentsEvent event, Emitter<TaskState> emit) async {
-    emit(FetchingCommentsLoadingState());
+ 
+ 
+  _handleFetchCommentsEvent(FetchCommentsEvent event, Emitter<TaskState> emit)async* {
+  emit(FetchingCommentsLoadingState());
 
-    final addedCommentEither =
-        await _taskViewModel.getCommentsForTask(event.taskId);
+  yield FetchingCommentsLoadingState();
 
-    addedCommentEither.fold(
-      (error) {
-        emit(FetchingCommentsErrorState(error));
-      },
-      (fetchingcomment) {
-        // Don't call the addCommentToTask function again here
-       emit(FetchingCommentsLoadedState(comments: fetchingcomment));
-      },
-    );
-  }
-
+      final commentsEither = await _taskViewModel.getCommentsForTask(event.taskId);
+      
+      yield* commentsEither.fold(
+        (error) async* {
+          yield FetchingCommentsErrorState(error);
+        },
+        (comments) async* {
+          yield FetchingCommentsLoadedState(comments: comments);
+        },
+      );
+    }
 }
+

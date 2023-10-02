@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:company/features/presentation/views/taskScreen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:company/core/constants/colors_managers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/constants/textstyle_manager.dart';
 import '../../../core/helpingFunctions.dart';
@@ -412,6 +415,10 @@ class _TaskDetailsState extends State<TaskDetails> {
                                                               commenterurl,
                                                           commenterName:
                                                               commentername,
+                                                          timestamp: DateFormat(
+                                                                  'yyyy-MM-dd HH:mm:ss')
+                                                              .format(DateTime
+                                                                  .now()),
                                                         ),
                                                         taskId: widget.taskId!,
                                                       ),
@@ -516,27 +523,59 @@ class _TaskDetailsState extends State<TaskDetails> {
                 }
               },
             ),
-            ListView.separated(
-              reverse: true,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (ctx, index) {
-                print('Building item $index');
-                final comments = _allcomments2[index];
-                return CommentWidget(
-                  commentId: comments.commentId!,
-                  commentBody: comments.commentBody!,
-                  commenterId: '',
-                  commenterName: comments.commenterName!,
-                  commenterImageUrl: comments.commenterImageUrl!,
-                );
+            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: FirebaseFirestore.instance
+                  .collection('comments')
+                  .where('commentId', isEqualTo: widget.taskId)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  List<Comment> commentsList = [];
+                  for (var doc in snapshot.data!.docs) {
+                    final comment = Comment(
+                      commentId: doc.id,
+                      commentBody: doc['commentBody'] ?? "",
+                      commenterId: doc['commenterId'] ?? "",
+                      commenterName: doc['commenterName'] ?? "",
+                      commenterImageUrl: doc['commenterImageUrl'] ?? "",
+                      timestamp: DateTime.parse(
+                          doc['timestamp']), // Convert timestamp to DateTime
+                    );
+                    commentsList.add(comment);
+                  }
+
+                  // Sort the commentsList based on timestamps
+                  commentsList
+                      .sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (ctx, index) {
+                      Comment comment = commentsList[index];
+
+                      return CommentWidget(
+                        time: comment.timestamp,
+                        commentId: comment.commentId!,
+                        commentBody: comment.commentBody!,
+                        commenterId: comment.commenterId!,
+                        commenterName: comment.commenterName!,
+                        commenterImageUrl: comment.commenterImageUrl!,
+                      );
+                    },
+                    separatorBuilder: (ctx, index) {
+                      return const Divider(
+                        thickness: 1,
+                      );
+                    },
+                    itemCount: commentsList.length,
+                  );
+                }
               },
-              separatorBuilder: (ctx, index) {
-                return const Divider(
-                  thickness: 1,
-                );
-              },
-              itemCount: _allcomments2.length,
             )
           ],
         ),
