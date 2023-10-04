@@ -1,3 +1,4 @@
+import 'package:company/features/presentation/theBloc/EmployeeBloc/bloc/employee_bloc.dart';
 import 'package:company/features/presentation/theBloc/bloc/profile_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -30,11 +31,13 @@ RegistrationModel? registrationModel;
 
 class _MyAppState extends State<MyApp> {
   final ProfileBloc _profileBloc = ProfileBloc();
+ 
 
   @override
   void initState() {
     super.initState();
     _profileBloc.add(FetchProfileEvent());
+   
   }
 
   Widget build(BuildContext context) {
@@ -65,7 +68,8 @@ class _MyAppState extends State<MyApp> {
               ),
               BlocProvider(
                 create: (context) => ProfileBloc()..add(FetchProfileEvent()),
-              )
+              ),
+              BlocProvider(create: (context) => EmployeeBloc()..add(FetchEmployeesEvent()),)
             ],
             child: MaterialApp(
               theme: ThemeData(

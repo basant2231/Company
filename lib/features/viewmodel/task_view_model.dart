@@ -12,7 +12,7 @@ import '../presentation/theBloc/taskbloc/bloc/task_bloc.dart';
 import 'package:intl/intl.dart';
 
 class TaskViewModel {
-  final String userIdd = FirebaseAuth.instance.currentUser!.uid;
+ static final String userIdd = FirebaseAuth.instance.currentUser!.uid;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 

@@ -84,8 +84,8 @@ class CommentWidget extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                         child: Text(
                           time.toString(),
-                          style:
-                              const TextStyle(color: Colors.blueGrey, fontSize:11),
+                          style: const TextStyle(
+                              color: Colors.blueGrey, fontSize: 11),
                         ),
                       )
                     ],

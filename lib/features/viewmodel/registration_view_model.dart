@@ -70,6 +70,7 @@ class RegisterViewModel {
           'phoneNumber': event.registrationModel.phoneNumber,
           'position': event.registrationModel.position,
           'imagePath': imageUrl,
+          "email":event.registrationModel.emailAddress
         });
 
         // Retrieve the document to get the 'uid' value

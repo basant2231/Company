@@ -1,25 +1,23 @@
-
-
 import 'package:company/core/constants/colors_managers.dart';
+import 'package:company/features/presentation/views/eachWorker.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/images_manager.dart';
+import '../../../../core/helpingFunctions.dart';
 
 class AllWorkersWidget extends StatefulWidget {
-  final String userID;
-  final String userName;
-  final String userEmail;
+  final String employeeName;
+  final String employeeEmail;
   final String positionInCompany;
   final String phoneNumber;
-  final String userImageUrl;
+  final String employeeImageUrl;
 
   const AllWorkersWidget(
-      {super.key, required this.userID,
-      required this.userName,
-      required this.userEmail,
+      {super.key,
+      required this.employeeName,
+      required this.employeeEmail,
       required this.positionInCompany,
       required this.phoneNumber,
-      required this.userImageUrl});
+      required this.employeeImageUrl});
   @override
   _AllWorkersWidgetState createState() => _AllWorkersWidgetState();
 }
@@ -32,16 +30,19 @@ class _AllWorkersWidgetState extends State<AllWorkersWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       child: ListTile(
           onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => ProfileScreen(
-            //       userID: widget.userID,
-            //     ),
-            //   ),
-            // );
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) {
+                return EachWorkerScreen(email: widget.employeeEmail,
+                    name: widget.employeeName,
+                    employeimage: widget.employeeImageUrl,
+                    position: widget.positionInCompany,
+                  
+                    number: widget.phoneNumber);
+              },
+            ));
           },
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           leading: Container(
             padding: const EdgeInsets.only(right: 12.0),
             decoration: const BoxDecoration(
@@ -52,18 +53,11 @@ class _AllWorkersWidgetState extends State<AllWorkersWidget> {
             child: CircleAvatar(
               backgroundColor: Colors.transparent,
               radius: 20,
-              /*
-              Image.asset(
-                      isDone ? MyImages.checkmark : MyImages.clock,
-                      fit: BoxFit.contain,
-                    ),*/ 
-              child: Image.asset(widget.userImageUrl == null
-                  ? MyImages.checkmark 
-                  :  MyImages.clock),
+              child: Image.network(widget.employeeImageUrl),
             ),
           ),
           title: Text(
-            widget.userName,
+            widget.employeeName,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.bold),
@@ -77,7 +71,7 @@ class _AllWorkersWidgetState extends State<AllWorkersWidget> {
                 color: MyColors.ddarkindego,
               ),
               Text(
-                '${widget.positionInCompany}/${widget.phoneNumber}',
+                '${widget.positionInCompany}\n${widget.phoneNumber}',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 16),
@@ -90,9 +84,10 @@ class _AllWorkersWidgetState extends State<AllWorkersWidget> {
               size: 30,
               color: MyColors.ddarkindego,
             ),
-            onPressed: (){},
+            onPressed: () {
+               LaunchUtilsFunctions.mailTo(widget.employeeEmail, context);
+            },
           )),
     );
   }
-
 }
