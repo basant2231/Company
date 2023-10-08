@@ -5,11 +5,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/bloc_observer.dart';
+import 'core/helpingFunctions.dart';
+import 'core/notificationHelper.dart';
 import 'core/route_manager.dart';
 import 'features/models/Registermodel.dart';
 import 'features/presentation/theBloc/bloc/auth_bloc.dart';
 import 'features/presentation/theBloc/taskbloc/bloc/task_bloc.dart';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 // Import the async library
@@ -17,6 +18,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Bloc.observer = CustomBlocObserver();
+    NotificationHelper.initializeNotifications();
   runApp(const MyApp());
 }
 
@@ -78,7 +80,6 @@ class _MyAppState extends State<MyApp> {
                 scaffoldBackgroundColor: Colors.indigo[100],
               ),
               debugShowCheckedModeBanner: false,
-              //  home: const TaskScreen(),
               initialRoute: FirebaseAuth.instance.currentUser == null
                   ? Routes.registerPagekey
                   : Routes.layoutkey,

@@ -58,6 +58,7 @@ dependencies:
   intl: ^0.18.1
   connectivity_plus: ^4.0.2
   google_sign_in: ^6.1.5
+  awesome_notifications: ^0.8.2
 
 
 dev_dependencies:

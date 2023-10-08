@@ -5,6 +5,8 @@ import 'package:company/features/viewmodel/registration_view_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../core/helpingFunctions.dart';
+import '../../core/notificationHelper.dart';
 import '../models/TaskModel.dart';
 import '../models/commentModel.dart';
 import '../models/tasks.dart';
@@ -37,7 +39,7 @@ class TaskViewModel {
         'taskBeginningDate': formattedDate,
         'isDone': false, // Set the initial value of isDone to false
       });
-
+  NotificationHelper.sendTaskNotification();
       final taskModel = event.tasks;
       return right(taskModel);
     } catch (e) {

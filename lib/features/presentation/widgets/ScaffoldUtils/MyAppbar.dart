@@ -23,21 +23,6 @@ AppBar MyAppbar(BuildContext context) {
         color: MyColors.blue,
       ),
     ),
-    actions: [
-      IconButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return FilterDialog(context: context, size: size);
-            },
-          );
-        },
-        icon: const Icon(
-          Icons.filter_list_outlined,
-          color: MyColors.blue,
-        ),
-      ),
-    ],
+   
   );
 }
