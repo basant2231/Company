@@ -5,7 +5,6 @@ import 'package:company/features/viewmodel/registration_view_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../core/helpingFunctions.dart';
 import '../../core/notificationHelper.dart';
 import '../models/TaskModel.dart';
 import '../models/commentModel.dart';
@@ -92,36 +91,46 @@ class TaskViewModel {
     }
   }
 
-  Future<Either<String, String>> deleteTask(String taskId) async {
-    try {
-      final DocumentReference taskDocRef = _firestore
-          .collection('users')
-          .doc(userIdd)
-          .collection('tasks')
-          .doc(taskId);
+ Future<Either<String, String>> deleteTask(String taskId) async {
+  try {
+    final DocumentReference taskDocRef = _firestore
+        .collection('users')
+        .doc(userIdd)
+        .collection('tasks')
+        .doc(taskId);
 
-      final DocumentSnapshot taskDoc = await taskDocRef.get();
-      if (!taskDoc.exists) {
-        return left(
-            'Permission denied: Only the creator of this task can delete it.'); // Task with the given ID doesn't exist
-      }
-
-      final Map<String, dynamic> taskData =
-          taskDoc.data() as Map<String, dynamic>;
-
-      // Check if the current user is the owner of the task
-      if (taskData['personId'] == userIdd) {
-        // User is the owner, allow deletion
-        await taskDocRef.delete();
-        return right('Task deleted successfully');
-      } else {
-        // User is not the owner, do not allow deletion
-        return left('Permission denied: You cannot delete this task');
-      }
-    } catch (e) {
-      return left('Task Deletion Error: $e');
+    final DocumentSnapshot taskDoc = await taskDocRef.get();
+    if (!taskDoc.exists) {
+      return left('Permission denied: You cannot delete this task because you are not the creator'); // Task with the given ID doesn't exist
     }
+
+    final Map<String, dynamic> taskData =
+        taskDoc.data() as Map<String, dynamic>;
+
+    // Check if the current user is the owner of the task
+    if (taskData['personId'] == userIdd) {
+      // User is the owner, delete the task
+      await taskDocRef.delete();
+
+      // Delete comments related to this task
+      final QuerySnapshot commentsSnapshot = await _firestore
+          .collection('comments')
+          .where('commentId', isEqualTo: taskId)
+          .get();
+      
+      for (final commentDoc in commentsSnapshot.docs) {
+        await commentDoc.reference.delete();
+      }
+
+      return right('Task and its comments deleted successfully');
+    } else {
+      // User is not the owner, do not allow deletion
+      return left('Permission denied: You cannot delete this task');
+    }
+  } catch (e) {
+    return left('Task Deletion Error: $e');
   }
+}
 
   Future<Either<String, String>> updateTaskStatus(
       String taskId, bool isDone) async {

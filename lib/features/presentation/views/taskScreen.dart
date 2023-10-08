@@ -106,6 +106,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                 taskId: task.taskId,
                                 uploadedBy: task.authorName,
                                 isDone: task.isDone,
+                                category: task.taskCategory,
                               );
                             },
                             gridDelegate:
