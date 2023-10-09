@@ -6,33 +6,19 @@
 
 # Directory Structure for project
 lib
-
 |-- core
-
 |   |-- bloc_observer.dart
-
 |   |-- helping_functions.dart
-
 |   |-- notification_helper.dart
-
 |   |-- route_manager.dart
-
 |   |-- user_manager.dart
-
 |   |-- validation.dart
-
 |   |-- constants
-
 |       |-- colors_manager.dart
-
 |       |-- images_manager.dart
-
 |       |-- my_lists.dart
-
 |       |-- textstyle_manager.dart
-
 |
-
 |-- features
 |   |-- models
 |   |   |-- comment_model.dart
