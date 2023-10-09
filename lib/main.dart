@@ -1,5 +1,4 @@
-import 'package:company/features/presentation/theBloc/EmployeeBloc/bloc/employee_bloc.dart';
-import 'package:company/features/presentation/theBloc/bloc/profile_bloc.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +8,12 @@ import 'core/helpingFunctions.dart';
 import 'core/notificationHelper.dart';
 import 'core/route_manager.dart';
 import 'features/models/Registermodel.dart';
-import 'features/presentation/theBloc/bloc/auth_bloc.dart';
-import 'features/presentation/theBloc/taskbloc/bloc/task_bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+
+import 'features/view/theBloc/EmployeeBloc/bloc/employee_bloc.dart';
+import 'features/view/theBloc/authBloc/auth_bloc.dart';
+import 'features/view/theBloc/profileBloc/profile_bloc.dart';
+import 'features/view/theBloc/taskbloc/bloc/task_bloc.dart';
 
 // Import the async library
 void main() async {

@@ -3,7 +3,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/images_manager.dart';
-import '../../theBloc/bloc/auth_bloc.dart';
+import '../../theBloc/authBloc/auth_bloc.dart';
+
 import '../../widgets/Dialogs/errorsuccessDialog.dart';
 
 bool isDialogShown = false;

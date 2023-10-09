@@ -1,8 +1,4 @@
 
-
-
-
-import 'package:company/features/presentation/widgets/ScaffoldUtils/MyAppbar.dart';
 import 'package:flutter/material.dart';
 
 class LogoutScreen extends StatelessWidget {

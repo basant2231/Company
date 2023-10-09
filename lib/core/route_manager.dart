@@ -1,19 +1,19 @@
 
-import 'package:company/features/presentation/views/LayoutScreen.dart';
-import 'package:company/features/presentation/views/auth/forgotPasswordScreen.dart';
 import 'package:flutter/material.dart';
 
-import '../features/presentation/views/addTaskScreen.dart';
-import '../features/presentation/views/allWorkersScreen.dart';
+import '../features/view/presentation/LayoutScreen.dart';
+import '../features/view/presentation/addTaskScreen.dart';
+import '../features/view/presentation/allWorkersScreen.dart';
+import '../features/view/presentation/auth/forgotPasswordScreen.dart';
+import '../features/view/presentation/auth/loginScreen.dart';
+import '../features/view/presentation/auth/registerScreen.dart';
+import '../features/view/presentation/eachWorker.dart';
+import '../features/view/presentation/noInternet.dart';
+import '../features/view/presentation/profileScreen.dart';
+import '../features/view/presentation/splashٍScreen.dart';
+import '../features/view/presentation/taskScreen.dart';
+import '../features/view/presentation/taskScreendetails.dart';
 
-import '../features/presentation/views/auth/loginScreen.dart';
-import '../features/presentation/views/auth/registerScreen.dart';
-import '../features/presentation/views/eachWorker.dart';
-import '../features/presentation/views/noInternet.dart';
-import '../features/presentation/views/profileScreen.dart';
-import '../features/presentation/views/splashٍScreen.dart';
-import '../features/presentation/views/taskScreen.dart';
-import '../features/presentation/views/taskScreendetails.dart';
 
 class Routes {
 

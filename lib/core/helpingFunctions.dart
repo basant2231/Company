@@ -1,10 +1,12 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:company/features/presentation/widgets/Dialogs/errorsuccessDialog.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:image_cropper/image_cropper.dart';
+
+import '../features/view/widgets/Dialogs/errorsuccessDialog.dart';
 
 class CropFunction {
   static Future<CroppedFile?> cropImage(String filePath) async {

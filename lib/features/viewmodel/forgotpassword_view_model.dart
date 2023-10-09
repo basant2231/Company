@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../presentation/theBloc/bloc/auth_bloc.dart';
+
+import '../view/theBloc/authBloc/auth_bloc.dart';
 
 class ForgotPasswordViewModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;

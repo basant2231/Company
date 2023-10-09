@@ -1,9 +1,11 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:company/core/constants/MyLists.dart';
 import 'package:company/core/constants/colors_managers.dart';
-import 'package:company/features/presentation/widgets/ScaffoldUtils/MyAppbar.dart';
-import 'package:company/features/presentation/widgets/ScaffoldUtils/drawer.dart';
+import 'package:company/features/view/widgets/ScaffoldUtils/MyAppbar.dart';
+
 import 'package:flutter/material.dart';
+
+import '../widgets/ScaffoldUtils/drawer.dart';
 
 
 class LayoutScreen extends StatefulWidget {

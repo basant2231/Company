@@ -1,11 +1,13 @@
-import 'package:company/features/presentation/views/taskScreendetails.dart';
-import 'package:company/features/presentation/widgets/ScaffoldUtils/drawer.dart';
-import 'package:company/features/presentation/widgets/Grid&List/taskWidget.dart';
+
+import 'package:company/features/view/presentation/taskScreendetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../theBloc/bloc/profile_bloc.dart';
+
+import '../theBloc/profileBloc/profile_bloc.dart';
 import '../theBloc/taskbloc/bloc/task_bloc.dart';
 import '../widgets/Dialogs/errorsuccessDialog.dart';
+import '../widgets/Grid&List/taskWidget.dart';
+import '../widgets/ScaffoldUtils/drawer.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 String? commentername;

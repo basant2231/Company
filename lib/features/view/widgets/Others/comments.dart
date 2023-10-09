@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../views/profileScreen.dart';
+import '../../presentation/profileScreen.dart';
+
 
 class CommentWidget extends StatelessWidget {
   CommentWidget({

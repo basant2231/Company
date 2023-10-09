@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../theBloc/bloc/auth_bloc.dart';
+import '../../theBloc/authBloc/auth_bloc.dart';
 
 
 

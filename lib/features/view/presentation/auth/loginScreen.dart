@@ -8,7 +8,8 @@ import '../../../../core/constants/textstyle_manager.dart';
 import '../../../../core/route_manager.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart'; // For Flutter Bloc
-import '../../theBloc/bloc/auth_bloc.dart';
+
+import '../../theBloc/authBloc/auth_bloc.dart';
 import '../../widgets/Dialogs/errorsuccessDialog.dart';
 
 class LoginScreen extends StatefulWidget {

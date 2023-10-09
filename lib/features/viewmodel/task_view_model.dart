@@ -9,8 +9,10 @@ import '../../core/notificationHelper.dart';
 import '../models/TaskModel.dart';
 import '../models/commentModel.dart';
 import '../models/tasks.dart';
-import '../presentation/theBloc/taskbloc/bloc/task_bloc.dart';
+
 import 'package:intl/intl.dart';
+
+import '../view/theBloc/taskbloc/bloc/task_bloc.dart';
 
 class TaskViewModel {
  static final String userIdd = FirebaseAuth.instance.currentUser!.uid;

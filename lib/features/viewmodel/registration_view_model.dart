@@ -15,7 +15,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:dartz/dartz.dart';
 
-import '../presentation/theBloc/bloc/auth_bloc.dart';
+import '../view/theBloc/authBloc/auth_bloc.dart';
+
 
 final uuid = const Uuid();
 

@@ -1,8 +1,9 @@
 import 'package:company/core/constants/colors_managers.dart';
-import 'package:company/features/presentation/views/eachWorker.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../../../core/helpingFunctions.dart';
+import '../../presentation/eachWorker.dart';
 
 class AllWorkersWidget extends StatefulWidget {
   final String employeeName;

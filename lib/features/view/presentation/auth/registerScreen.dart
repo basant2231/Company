@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:company/core/validation.dart';
-import 'package:company/features/presentation/widgets/Dialogs/jobDialog.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,9 +11,11 @@ import '../../../../core/constants/images_manager.dart';
 import '../../../../core/constants/textstyle_manager.dart';
 import '../../../../core/route_manager.dart';
 import '../../../models/Registermodel.dart';
-import '../../theBloc/bloc/auth_bloc.dart';
+
+import '../../theBloc/authBloc/auth_bloc.dart';
 import '../../widgets/Dialogs/ImageDialog.dart';
 import '../../widgets/Dialogs/errorsuccessDialog.dart';
+import '../../widgets/Dialogs/jobDialog.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);

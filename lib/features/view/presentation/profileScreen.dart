@@ -1,17 +1,16 @@
-import 'package:company/features/presentation/theBloc/bloc/auth_bloc.dart';
-import 'package:company/features/presentation/views/taskScreen.dart';
-import 'package:company/features/presentation/widgets/ScaffoldUtils/drawer.dart';
+
+import 'package:company/features/view/presentation/taskScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/constants/colors_managers.dart';
-import '../../../core/helpingFunctions.dart';
-import '../theBloc/bloc/profile_bloc.dart';
-import '../widgets/Buttons/SocialButton.dart';
+
+import '../theBloc/authBloc/auth_bloc.dart';
+import '../theBloc/profileBloc/profile_bloc.dart';
 import '../widgets/Buttons/logOutButton.dart';
 import '../widgets/Dialogs/errorsuccessDialog.dart';
 import '../widgets/Others/socialInfo.dart';
+import '../widgets/ScaffoldUtils/drawer.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -136,47 +135,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(
                               height: 30,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                SocialButton(
-                                  color: Colors.green,
-                                  icon: FontAwesomeIcons.whatsapp,
-                                  onPressed: () {
-                                    LaunchUtilsFunctions.openWhatsAppChat(
-                                      phoneNumber,
-                                      context,
-                                    );
-                                  },
-                                ),
-                                SocialButton(
-                                  color: Colors.red,
-                                  icon: Icons.mail_outline_outlined,
-                                  onPressed: () {
-                                    LaunchUtilsFunctions.mailTo(email, context);
-                                  },
-                                ),
-                                SocialButton(
-                                  color: Colors.purple,
-                                  icon: Icons.call_outlined,
-                                  onPressed: () {
-                                    LaunchUtilsFunctions.callPhoneNumber(
-                                      phoneNumber,
-                                      context,
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                        
+                          
                             const Divider(
                               thickness: 1,
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            
                             BlocBuilder<AuthBloc, AuthState>(
                               builder: (context, state) {
                                 return LogoutButton(ontap: () {

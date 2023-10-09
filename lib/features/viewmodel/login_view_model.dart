@@ -2,7 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../presentation/theBloc/bloc/auth_bloc.dart';
+import '../view/theBloc/authBloc/auth_bloc.dart';
+
 
 class LoginViewModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;

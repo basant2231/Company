@@ -1,9 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
-import '../../features/presentation/views/addTaskScreen.dart';
-import '../../features/presentation/views/allWorkersScreen.dart';
-import '../../features/presentation/views/profileScreen.dart';
-import '../../features/presentation/views/taskScreen.dart';
+
+import '../../features/view/presentation/addTaskScreen.dart';
+import '../../features/view/presentation/allWorkersScreen.dart';
+import '../../features/view/presentation/profileScreen.dart';
+import '../../features/view/presentation/taskScreen.dart';
 
 class MyLists{
  static List<String> jobcategorylist = [

@@ -1,10 +1,10 @@
 import 'package:company/core/constants/colors_managers.dart';
-import 'package:company/features/presentation/widgets/Dialogs/LogOutAlertDialog.dart';
-import 'package:company/features/presentation/widgets/Dialogs/errorsuccessDialog.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../theBloc/bloc/auth_bloc.dart';
+import '../../theBloc/authBloc/auth_bloc.dart';
+import '../Dialogs/errorsuccessDialog.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({

@@ -1,7 +1,8 @@
 import 'package:company/core/constants/colors_managers.dart';
 import 'package:flutter/material.dart';
 
-import '../../views/LayoutScreen.dart';
+
+import '../../presentation/LayoutScreen.dart';
 import '../Dialogs/filterDialog.dart';
 
 AppBar MyAppbar(BuildContext context) {
